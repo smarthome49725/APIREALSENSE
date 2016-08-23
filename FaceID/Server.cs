@@ -18,6 +18,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 
+
+
 namespace FaceID
 {
     class Server
@@ -46,7 +48,7 @@ namespace FaceID
             //enter to an infinite cycle to be able to handle every change in stream
             while (true)
             {
-                Console.WriteLine("\n\n*-----------------Aguardadndo conexão--------------*\n");
+                //Console.WriteLine("\n\n*-----------------Aguardadndo conexão--------------*\n");
 
                 // Realizar uma chamada de bloqueio para aceitar solicitações. 
                 // Você também poderia utilizador server.AcceptSocket () aqui.
@@ -66,14 +68,18 @@ namespace FaceID
 
                     // translate bytes of request to string            
                     String data = Encoding.UTF8.GetString(bytes);
-                    Console.WriteLine("\n*------------MSG: " + cont.ToString() + " " + data.GetType() + "------------------*" + Environment.NewLine);
+                    //Console.WriteLine("\n*------------MSG: " + cont.ToString() + " " + data.GetType() + "------------------*" + Environment.NewLine);
 
                     //Se a msg não inicia com GET, envia para ser decodificada com msg normal
                     if (!(new Regex("^GET").IsMatch(data)))
                     {
-                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        msg = Converter.decodedStr(bytes, bytes.Length);
+                        //Funções de interrupção e flag' 
+                        Actions.actions(msg); 
                     }
 
+                    
+                    
                     /* Verifica se a mensagem inicia com a string "GET", se iniciar, subtende-se que a mesma é um cabeçalho HTTP
                      * solicitando um handshack
                      */
@@ -98,10 +104,7 @@ namespace FaceID
                         Console.WriteLine("\n\n+++-----------RESPONSE-----------+++\n\n" + statusResponse);
 
 
-                    }
-                    //Funções de interrupção e flag's                   
-                   
-
+                    }                        
 
                 }
             }
