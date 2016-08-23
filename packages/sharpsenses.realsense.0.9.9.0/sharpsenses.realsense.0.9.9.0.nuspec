@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>sharpsenses.realsense</id>
+    <version>0.9.9.0</version>
+    <title>SharpSenses - Intel RealSense SDK</title>
+    <authors>Andre Carlucci</authors>
+    <owners>Andre Carlucci</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/SharpSenses/SharpSenses</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/SharpSenses/SharpSenses/master/Assets/ss.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An easier way to use Intel RealSense SDK. Custom poses, gestures and much more.</description>
+    <summary />
+    <copyright>Copyright Andre Carlucci 2014</copyright>
+    <tags>realsense intel camera3d gestures</tags>
+    <dependencies>
+      <dependency id="libpxcclr.cs" version="8.0.24.6528" />
+    </dependencies>
+    <references>
+      <reference file="sharpsenses.dll" />
+      <reference file="sharpsenses.RealSense.dll" />
+    </references>
+  </metadata>
+</package>

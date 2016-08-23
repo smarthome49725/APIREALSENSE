@@ -1,0 +1,15 @@
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\bin\Release\FaceID.exe.config
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\bin\Release\FaceID.exe
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\bin\Release\FaceID.pdb
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\bin\Release\libpxcclr.cs.dll
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID.csprojResolveAssemblyReference.cache
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\MainWindow.baml
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\MainWindow.g.cs
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\App.g.cs
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID_Content.g.cs
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID_MarkupCompile.cache
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID.g.resources
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID.Properties.Resources.resources
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID.csproj.GenerateResource.Cache
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID.exe
+C:\Users\ADM\Documents\SH2Homologação\FaceID\FaceID\FaceID\obj\Release\FaceID.pdb

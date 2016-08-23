@@ -1,0 +1,43 @@
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\bin\Debug\FaceID.exe.config
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID.csprojResolveAssemblyReference.cache
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\MainWindow.baml
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\MainWindow.g.cs
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\App.g.cs
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID_MarkupCompile.cache
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID.g.resources
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID.Properties.Resources.resources
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID.csproj.GenerateResource.Cache
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\bin\Debug\FaceID.exe
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\bin\Debug\FaceID.pdb
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID.exe
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID.pdb
+C:\Users\Mostratec\Documents\Visual Studio 2012\Projects\SH49725\FaceID\FaceID\FaceID\obj\Debug\FaceID_Content.g.cs
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\bin\Debug\FaceID.exe.config
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\bin\Debug\FaceID.exe
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\bin\Debug\FaceID.pdb
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID.csprojResolveAssemblyReference.cache
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\MainWindow.baml
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\MainWindow.g.cs
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\App.g.cs
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID_Content.g.cs
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID_MarkupCompile.cache
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID.g.resources
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID.Properties.Resources.resources
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID.csproj.GenerateResource.Cache
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID.exe
+C:\Users\Mostratec\Downloads\documents-export-2016-08-15\FaceID\FaceID\FaceID\FaceID\obj\Debug\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\FaceID.exe.config
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID.exe
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\FaceID.exe
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\libpxcclr.cs.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID.csprojResolveAssemblyReference.cache
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\MainWindow.baml
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\MainWindow.g.cs
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\App.g.cs
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID_Content.g.cs
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID_MarkupCompile.cache
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID.g.resources
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID.Properties.Resources.resources
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Debug\FaceID.csproj.GenerateResource.Cache
