@@ -20,7 +20,7 @@ using System.Threading;
 using System.Drawing; //Utilizado para suportar operações com Bitmap
 using System.Windows.Controls;
 using System.IO; //Utilizado para I/O de arquivos etc.
-using System.Threading;
+
 
 
 

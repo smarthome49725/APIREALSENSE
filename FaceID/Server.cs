@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -16,9 +15,6 @@ using System.Security.Cryptography; //SH1
 using System.Net.WebSockets;
 using System.Drawing;
 using System.Drawing.Imaging;
-
-
-
 
 namespace FaceID
 {
@@ -32,9 +28,9 @@ namespace FaceID
         {
             TcpListener server = null;
 
-            // Set the TcpListener on port 80.
-            Int32 port = 80;
-            IPAddress host = IPAddress.Parse("192.168.1.123");
+            // Set the TcpListener on port 8080.
+            Int32 port = 8080;
+            IPAddress host = IPAddress.Parse("192.168.1.117");
 
             // TcpListener server = new TcpListener(port);
             server = new TcpListener(host, port);
