@@ -16,6 +16,8 @@ using System.Net.WebSockets;
 using System.Drawing;
 using System.Drawing.Imaging;
 
+using FaceID.Database;
+
 namespace FaceID
 {
     class Server
@@ -28,9 +30,13 @@ namespace FaceID
         {
             TcpListener server = null;
 
+
             // Set the TcpListener on port 8080.
             Int32 port = 8080;
-            IPAddress host = IPAddress.Parse("192.168.1.117");
+
+            string ipServer = "192.168.10.104";
+
+            IPAddress host = IPAddress.Parse(ipServer);
 
             // TcpListener server = new TcpListener(port);
             server = new TcpListener(host, port);
@@ -98,10 +104,7 @@ namespace FaceID
                         statusResponse = System.Text.Encoding.ASCII.GetString(response, 0, response.Length);
 
                         Console.WriteLine("\n\n+++-----------RESPONSE-----------+++\n\n" + statusResponse);
-
-
-                    }                        
-
+                    }
                 }
             }
         }   
@@ -110,7 +113,20 @@ namespace FaceID
         {
             Byte[] msgConverted = Converter.strToByte(mess);
             stream.WriteAsync(msgConverted, 0, msgConverted.Length);
-        }               
-       
+        }
+
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("Local IP Address Not Found!");
+        }
+
     }
 }
