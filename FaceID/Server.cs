@@ -16,81 +16,64 @@ using System.Net.WebSockets;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-using FaceID.Database;
 
 namespace FaceID
 {
     class Server
     {
-
         public static NetworkStream stream;
-        string msg;
+        //public static NetworkStream streamBROW1;
+        // BETA public static NetworkStream streamBROW2;
+        public static NetworkStream streamNJS;
+        public static Thread conNJSThread = new Thread(Server.conNJS);
+        public static Thread conBROWThread1 = new Thread(Server.conBROW1);
+        // BETA public static Thread conBROWThread2 = new Thread(Server.conBROW2);
+        public static Byte[] bytes;
 
+        public static TcpClient client;
+        public static TcpListener server = null;
+        public static string ipAddress;
+
+        /************************
+         * START SERVICES
+         */
         public void StartServer()
         {
-            TcpListener server = null;
-
-
-            // Set the TcpListener on port 8080.
-            Int32 port = 8080;
-
-            string ipServer = "192.168.10.104";
-
-            IPAddress host = IPAddress.Parse(ipServer);
-
-            // TcpListener server = new TcpListener(port);
-            server = new TcpListener(host, port);
-
-            // Start listening for client requests.
-            // Começa a escultar as requisições de clientes
-            server.Start();
-
-            int cont = 0; //contar as mensagens
-
-            //enter to an infinite cycle to be able to handle every change in stream
-            while (true)
+            MessageBox.Show("socket ok?");
+            try
             {
-                //Console.WriteLine("\n\n*-----------------Aguardadndo conexão--------------*\n");
+                Int32 port = 8080;
+                
+                IPAddress host = IPAddress.Parse(ipAddress);                
+                server = new TcpListener(host, port);
 
-                // Realizar uma chamada de bloqueio para aceitar solicitações. 
-                // Você também poderia utilizador server.AcceptSocket () aqui.
-                TcpClient client = server.AcceptTcpClient();
-                stream = client.GetStream();
+                // Start listening for client requests.                
+                server.Start();
 
-                cont++; //contar as msg's
+                /*****************************************************
+                 * LOOP PARA CRIAR CONEXÕES NODEJS E BROWSER
+                 */
                 while (true)
                 {
-                    while (!stream.DataAvailable) ; //true Se houver dados disponíveis no stream a ser lido; Caso contrário, false.
-                    
-                    //(TcpClient.Available) Obtém a quantidade de dados que tenham sido recebidos a partir da rede e está disponível para ser lido.
-                    // Abaixo é utilizado para definir o tamanho do array de bytes
-                    Byte[] bytes = new Byte[client.Available];
+                    Console.WriteLine("AGUARDANDO SOCKET...");
 
+                    client = server.AcceptTcpClient();
+                    stream = client.GetStream();
+
+                    while (!stream.DataAvailable) ;
+                    bytes = new Byte[client.Available];
                     stream.Read(bytes, 0, bytes.Length);
-
-                    // translate bytes of request to string            
                     String data = Encoding.UTF8.GetString(bytes);
-                    //Console.WriteLine("\n*------------MSG: " + cont.ToString() + " " + data.GetType() + "------------------*" + Environment.NewLine);
 
-                    //Se a msg não inicia com GET, envia para ser decodificada com msg normal
-                    if (!(new Regex("^GET").IsMatch(data)))
+                    if ((new Regex("^GET").IsMatch(data)))
                     {
-                        msg = Converter.decodedStr(bytes, bytes.Length);
-                        //Funções de interrupção e flag' 
-                        Actions.actions(msg); 
-                    }
+                        Console.WriteLine("[WS]: " + data);
 
-                    
-                    
-                    /* Verifica se a mensagem inicia com a string "GET", se iniciar, subtende-se que a mesma é um cabeçalho HTTP
-                     * solicitando um handshack
-                     */
-                    if (new Regex("^GET").IsMatch(data))
-                    {
                         string statusResponse;
                         Byte[] response = Encoding.UTF8.GetBytes("HTTP/1.1 101 Switching Protocols" + Environment.NewLine
                         + "Connection: Upgrade" + Environment.NewLine
                         + "Upgrade: websocket" + Environment.NewLine
+                        /* + "Sec-WebSocket-Protocol: websession" + Environment.NewLine*/
                         + "Sec-WebSocket-Accept: " + Convert.ToBase64String(
                             SHA1.Create().ComputeHash(
                                 Encoding.UTF8.GetBytes(
@@ -103,30 +86,173 @@ namespace FaceID
                         stream.Write(response, 0, response.Length);
                         statusResponse = System.Text.Encoding.ASCII.GetString(response, 0, response.Length);
 
-                        Console.WriteLine("\n\n+++-----------RESPONSE-----------+++\n\n" + statusResponse);
+                        Console.WriteLine("[WS]: " + statusResponse);
+
+                        if (new Regex("User-Agent").IsMatch(data))
+                        {                            
+                            //BROWSER1 CONNECTION
+                            if (conBROWThread1.IsAlive)
+                            {
+                                /*streamBROW1 = null;
+                                streamBROW1 = stream;
+                                stream = null;*/
+                                Thread conBROWThread1 = new Thread(Server.conBROW1);
+                                conBROWThread1.Start();
+                                Console.WriteLine("conBROWThread Number: " + conBROWThread1.GetHashCode().ToString());
+                            }
+                            else
+                            {
+                                Thread conBROWThread1 = new Thread(Server.conBROW1);
+                                conBROWThread1.Start();
+                                Console.WriteLine("conBROWThread Number: " + conBROWThread1.GetHashCode().ToString());
+                            }
+
+                           /* BETA
+                            * //BROWSER2 CONNECTION
+                            if (conBROWThread2.IsAlive)
+                            {
+                                streamBROW2 = null;
+                                streamBROW2 = stream;
+                                stream = null;
+                                Console.WriteLine("conBROWThread Number: " + conBROWThread2.GetHashCode().ToString());
+                            }
+                            else
+                            {
+                                conBROWThread2.Start();
+                                Console.WriteLine("conBROWThread Number: " + conBROWThread2.GetHashCode().ToString());
+                            }*/
+                        }
+                        else
+                        {
+                            //NODEJS CONNECTION                               
+                            if (conNJSThread.IsAlive)
+                            {
+                                streamNJS = null;
+                                streamNJS = stream;
+                                stream = null;
+                                Console.WriteLine("conNJSThread Number: " + conNJSThread.GetHashCode().ToString());
+                            }
+                            else
+                            {
+                                conNJSThread.Start();
+                                Console.WriteLine("conNJSThread Number: " + conNJSThread.GetHashCode().ToString());
+
+                            }
+
+                        }
                     }
+
                 }
+                // Close everything.
+                stream.Close();
+                /*streamBROW1.Close();*/
+                streamNJS.Close();
+                client.Close();
             }
-        }   
-        
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException: {0}", e);
+            }
+            finally
+            {
+                server.Stop();
+            }
+
+            // informa e pausa o console para dar tempo de ler a exceção
+            Console.WriteLine("\nPressione enter para continuar...");
+            Console.Read();
+        }
+
+
+        /*****************
+         * CONEXÃO NODEJS                               
+         */
+        public static void conNJS()
+        {
+            Byte[] bytes = Server.bytes;
+            streamNJS = stream;
+            //stream = null;
+
+            while (true)
+            {
+                while (!streamNJS.DataAvailable) ; //true Se houver dados disponíveis no stream a ser lido; Caso contrário, false.                             
+
+                streamNJS.Read(bytes, 0, bytes.Length);                
+
+                // translate bytes of request to string            
+                String data = Encoding.UTF8.GetString(bytes);
+
+                string msg = Converter.decodedStr(bytes, bytes.Length);
+
+                Console.WriteLine("NODEJS: " + msg);
+            }
+
+        }
+
+
+        /********************
+         * CONEXÃO BROWSER1
+         */
+        public static void conBROW1()
+        {
+            Byte[] bytes = Server.bytes;
+            NetworkStream streamBROW1;
+            streamBROW1 = stream;
+            stream = null;
+
+            while (true)
+            {
+                while (!streamBROW1.DataAvailable) ; //true Se houver dados disponíveis no stream a ser lido; Caso contrário, false.               
+
+                streamBROW1.Read(bytes, 0, bytes.Length);
+
+                // translate bytes of request to string            
+                String data = Encoding.UTF8.GetString(bytes);
+
+                string msg = Converter.decodedStr(bytes, bytes.Length);
+                //Funções de interrupção e flag' 
+                //Actions.actions(msg);
+                Console.WriteLine("BROWSER: " + msg);
+            }
+        }
+
+
+        /********************
+         * BETA CONEXÃO BROWSER2
+         *
+        public static void conBROW2()
+        {
+            Byte[] bytes = Server.bytes;
+            streamBROW2 = stream;
+            stream = null;
+
+            while (true)
+            {
+                while (!streamBROW2.DataAvailable) ; //true Se houver dados disponíveis no stream a ser lido; Caso contrário, false.               
+
+                streamBROW2.Read(bytes, 0, bytes.Length);
+
+                // translate bytes of request to string            
+                String data = Encoding.UTF8.GetString(bytes);
+
+                string msg = Converter.decodedStr(bytes, bytes.Length);
+                //Funções de interrupção e flag' 
+                //Actions.actions(msg);
+                Console.WriteLine("BROWSER: " + msg);
+            }
+        }
+        */
+
+
+
         public static void sendMsg(String mess)
         {
             Byte[] msgConverted = Converter.strToByte(mess);
-            stream.WriteAsync(msgConverted, 0, msgConverted.Length);
-        }
-
-        public static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("Local IP Address Not Found!");
+            //stream.WriteAsync(msgConverted, 0, msgConverted.Length);
+            stream.Write(msgConverted, 0, msgConverted.Length);
         }
 
     }
 }
+
+

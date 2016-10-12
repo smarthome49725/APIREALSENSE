@@ -73,9 +73,8 @@ namespace FaceID
         {
             //WebSocket
             Server servidor = new Server();            
-            Thread servidorThread = new Thread(servidor.StartServer);
-            servidorThread.Start();
-            MessageBox.Show("socket ok?");
+            Thread servidorThread = new Thread(servidor.StartServer);            
+            servidorThread.Start();           
                         
 
             //----------------------------------------------
@@ -91,11 +90,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            ConfigureRealSense();
+            //-->ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            //-->processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
         }
 
 
@@ -540,8 +539,26 @@ namespace FaceID
             ReleaseResources();
         }
 
+        private void IP_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
+        }
 
+        private void configIP_Click(object sender, RoutedEventArgs e)
+        {
+            Server.ipAddress = IP.Text;             
+            MessageBox.Show("ipAddress Configurado com: " + Server.ipAddress);
+        }
 
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void sendCod_Click(object sender, RoutedEventArgs e)
+        {            
+            Server.sendMsg(cod.Text);
+        }
     } //public partial class MainWindow : Window
 }//namespace FaceID
 
