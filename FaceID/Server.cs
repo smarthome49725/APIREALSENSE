@@ -249,7 +249,7 @@ namespace FaceID
                     {
                         // translate bytes of request to string            
                         data = Encoding.UTF8.GetString(bytes);
-                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        msg = Converter.decodedStr(bytes, bytes.Length);
                         Actions.actions(msg);
                     }
                     else
@@ -292,7 +292,7 @@ namespace FaceID
                     {
                         // translate bytes of request to string            
                         data = Encoding.UTF8.GetString(bytes);
-                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        msg = Converter.decodedStr(bytes, bytes.Length);
                         Actions.actions(msg);
                     }
                     else
@@ -335,7 +335,7 @@ namespace FaceID
                     {
                         // translate bytes of request to string            
                         data = Encoding.UTF8.GetString(bytes);
-                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        msg = Converter.decodedStr(bytes, bytes.Length);
                         Actions.actions(msg);
                     }
                     else
@@ -358,68 +358,60 @@ namespace FaceID
         }
 
 
-        public static void sendMsg(bool BROWSER1, bool BROWSER2, bool BROWSER3, String mess)
+        /******************************************************
+         * SEND MSG FOR BROWSER:
+         * level == 1: send only for level 1
+         * level == 2: send only for level 2
+         * level == 3: send only for level 3
+         * level == 255: send for broadcasting (1 and 2 and 3)
+         */
+        public static void sendMsg(int level, String mess)
         {
             Byte[] msgConverted = Converter.strToByte(mess);
 
-            //TRY SEND MSG BROWSER1+++
-            try
+
+            if (level == 1 || (level == 255 && conBROW1canWrite))
             {
-                if (conBROW1canWrite && BROWSER1)
+                //TRY SEND MSG BROWSER1+++
+                try
                 {
                     streamBROW1.Write(msgConverted, 0, msgConverted.Length);
                 }
-                else
+                catch
                 {
-                    //Console.WriteLine("conBROW1canWrite WS: false");
+                    Console.WriteLine("Exception sendMsg BROWSER 111");
                 }
-
+                //TRY SEND MSG BROWSER1---
             }
-            catch
-            {
-                Console.WriteLine("Exception sendMsg BROWSER 111111111111111111111111");
-            }
-            //TRY SEND MSG BROWSER1---
 
-
-            //TRY SEND MSG BROWSER2+++
-            try
+            if (level == 2 || (level == 255 && conBROW2canWrite))
             {
-                if (conBROW2canWrite && BROWSER2)
+                //TRY SEND MSG BROWSER2+++
+                try
                 {
                     streamBROW2.Write(msgConverted, 0, msgConverted.Length);
                 }
-                else
+                catch
                 {
-                    //Console.WriteLine("conBROW1canWrite WS: false");
+                    Console.WriteLine("Exception sendMsg BROWSER 222");
                 }
-
+                //TRY SEND MSG BROWSER2---
             }
-            catch
-            {
-                Console.WriteLine("Exception sendMsg BROWSER 222222222222222222222222");
-            }
-            //TRY SEND MSG BROWSER2---
 
-
-            //TRY SEND MSG BROWSER3+++
-            try
+            if (level == 3 || (level == 255 && conBROW3canWrite))
             {
-                if (conBROW3canWrite && BROWSER3)
+                //TRY SEND MSG BROWSER3+++
+                try
                 {
                     streamBROW3.Write(msgConverted, 0, msgConverted.Length);
                 }
-                else
+                catch
                 {
-                    //Console.WriteLine("conBROW3canWrite WS: false");
+                    Console.WriteLine("Exception sendMsg BROWSER 333");
                 }
-
+                //TRY SEND MSG BROWSER3---
             }
-            catch
-            {
-                Console.WriteLine("Exception sendMsg BROWSER 333333333333333333333333");
-            }
-            //TRY SEND MSG BROWSER3---
+            
 
         }
 
@@ -446,8 +438,22 @@ namespace FaceID
                 Y++;
                 coords = Y.ToString() + " " + X.ToString() + " " + W.ToString() + " " + H.ToString();
 
-                Server.sendMsg(true, true, true, coords);
+                Server.sendMsg(255, coords);
                 Thread.Sleep(100);
+            }
+        }
+
+        /**
+        * TESTE ENVIANDO DADOS PARA O BROWSER
+        */
+        public static void testeDataBrowser()
+        {
+            while (true)
+            {
+                String msg = "TESTE ENVIANDO DADOS";
+                Server.sendMsg(1, msg);
+                Console.WriteLine("TESTE ENVIANDO DADOS PARA O BROWSER");
+                //Thread.Sleep(5000);
             }
         }
 
@@ -455,6 +461,9 @@ namespace FaceID
         {
             Thread testeCanvasHTML_TH = new Thread(Server.testeCanvasHTML);
             testeCanvasHTML_TH.Start();
+
+            /*Thread testeDataBrowser_TH = new Thread(Server.testeDataBrowser);
+            testeDataBrowser_TH.Start();*/
         }
 
 

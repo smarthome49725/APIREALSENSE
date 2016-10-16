@@ -31,7 +31,7 @@ namespace FaceID
             else if (rawData.Length >= 126 && rawData.Length <= 65535)
             {
                 frame[1] = (byte)126;
-                int len = rawData.Length;
+                long len = rawData.Length;
                 frame[2] = (byte)((len >> 8) & (byte)255);
                 frame[3] = (byte)(len & (byte)255);
                 frameCount = 4;
@@ -39,7 +39,7 @@ namespace FaceID
             else
             {
                 frame[1] = (byte)127;
-                int len = rawData.Length;
+                long len = rawData.Length;
                 frame[2] = (byte)((len >> 56) & (byte)255);
                 frame[3] = (byte)((len >> 48) & (byte)255);
                 frame[4] = (byte)((len >> 40) & (byte)255);

@@ -11,87 +11,73 @@ namespace FaceID
 {
     class Actions
     {
+        static Codigo codigo;
+
         public static void actions(string cod)
         {
 
             Console.WriteLine(cod);
-
-            if (new Regex("^registerUser").IsMatch(cod))
+            codigo = JsonConvert.DeserializeObject<Codigo>(cod);
+                        
+            switch (codigo.cod)
             {
-                Console.WriteLine("registerUser true");
-                string @string = cod.Replace("registerUser", "");
-                var json = log(@string);
-
-                Create create = new Create();
-                create.Adiciona(/*json.nome, json.tel, json.age*/);
-            }
-
-            if (new Regex("^unregisterUser").IsMatch(cod))
-            {
-                Console.WriteLine("unregisterUser");
-                string s = cod.Replace("unregisterUser", "");
-                Console.WriteLine(s);
-            }
-
-
-            /*if (new Regex("^LEVEL1:onrectON").IsMatch(cod))
-            {                
-                Console.WriteLine(cod);
-            }*/
-
-            switch (cod)
-            {
-                case "LEVEL1:rectON":
-                    Server.conBROW1canWrite = true;
-                    Console.WriteLine("switch LEVEL1:onrectON");
+                case "rect":
+                    rect();
                     break;
-                case "LEVEL2:rectON":
-                    Server.conBROW2canWrite = true;
-                    Console.WriteLine("switch LEVEL2:onrectON");
+                case "registerUser":
+                    registerUser();
                     break;
-                case "LEVEL3:rectON":
-                    Server.conBROW3canWrite = true;
-                    Console.WriteLine("switch LEVEL3:onrectON");
-                    break;
-                case "LEVEL1:rectOFF":
-                    Server.conBROW1canWrite = false;
-                    Console.WriteLine("switch LEVEL1:onrectOFF");
-                    break;
-                case "LEVEL2:rectOFF":
-                    Server.conBROW2canWrite = false;
-                    Console.WriteLine("switch LEVEL2:onrectOFF");
-                    break;
-                case "LEVEL3:rectOFF":
-                    Server.conBROW3canWrite = false;
-                    Console.WriteLine("switch LEVEL3:onrectOFF");
+                case "unregisterUser":
+                    unregisterUser();
                     break;
             }
-
-
-
         }
 
-        public static Usuario log(string json)
+        static void rect()
         {
-            //Console.WriteLine(json);
-
-            //string json = "{ \"ID\":\"0\",\"Nome\":\"MeuNome\",\"Email\":\"123@123.com.br\",\"Nascimento\":\"110595.0\"}";
-            Usuario deserializedUser = JsonConvert.DeserializeObject<Usuario>(json); /*Transforma a partir do JSON*/
-
-            /*Console.WriteLine(deserializedUser.nome);
-            Console.WriteLine(deserializedUser.tel);
-            Console.WriteLine(deserializedUser.age);
-            
-            Console.WriteLine("----------------");*/
-            return deserializedUser;
+            if (codigo.level == 1)
+            {
+                Server.conBROW1canWrite = codigo.rect;
+            }
+            if (codigo.level == 2)
+            {
+                Server.conBROW2canWrite = codigo.rect;
+            }
+            if (codigo.level == 3)
+            {
+                Server.conBROW3canWrite = codigo.rect;
+            }
+            Server.sendMsg(codigo.level, "Rect level" + codigo.level + ": " + codigo.rect);       
+            Console.WriteLine("Rect level" + codigo.level + ": " + codigo.rect);
         }
+
+        static void registerUser()
+        {
+            Console.WriteLine("registerUser true");          
+
+            Create create = new Create();
+            create.Adiciona(/*json.nome, json.tel, json.age*/);
+        }
+
+        static void unregisterUser()
+        {
+            Console.WriteLine("unregisterUser");            
+        }
+
+        
     }
 }
 
-class Usuario
+class Codigo
 {
-    //public Int32 ID { get; set; } //campo ID
-    public string nome { get; set; } // campo nome
-    public string tel { get; set; } // campo nascimento
-    public string age { get; set; } // campo email
+    public int level { get; set; }
+    public string cod { get; set; }
+
+    public bool rect { get; set; }
+
+    public string nome { get; set; }
+    public string tel { get; set; }
+    public string age { get; set; }
+    public string email { get; set; }
+
 }
