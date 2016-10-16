@@ -313,7 +313,7 @@ namespace FaceID
                             
                             //int faceRectangleX2 = (faceRectangleX - 510) * -1;
                            
-                            Server.sendMsg(faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString());
+                            //Server.sendMsg(faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString());
                           
                                
 
@@ -557,12 +557,13 @@ namespace FaceID
 
         private void sendCod_Click(object sender, RoutedEventArgs e)
         {            
-            Server.sendMsg(cod.Text);
+            //Server.sendMsg(cod.Text);
         }
 
         private void sendCoordCanvasHTML_Click(object sender, RoutedEventArgs e)
         {
             Server.startTesteCanvasHTML();
+            Console.WriteLine("startTesteCanvasHTML!");
         }
     } //public partial class MainWindow : Window
 }//namespace FaceID

@@ -77,7 +77,6 @@ C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.xml
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.SqlServer.xml
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\Newtonsoft.Json.xml
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.xml
-C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.csprojResolveAssemblyReference.cache
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\MainWindow.baml
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\MainWindow.g.cs
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\App.g.cs
@@ -86,3 +85,4 @@ C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID_MarkupCompile.
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.g.resources
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.Properties.Resources.resources
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.csproj.GenerateResource.Cache
+C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.csprojResolveAssemblyReference.cache

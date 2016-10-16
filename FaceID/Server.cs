@@ -26,13 +26,15 @@ namespace FaceID
         public static NetworkStream streamBROW1;
         public static NetworkStream streamBROW2;
         public static NetworkStream streamBROW3;
-        
+
         public static Thread conNJSThread = new Thread(Server.conNJS);
         public static Thread conBROW1Thread = new Thread(Server.conBROW1);
         public static Thread conBROW2Thread = new Thread(Server.conBROW2);
-        public static Thread conBROW3Thread = new Thread(Server.conBROW3);        
+        public static Thread conBROW3Thread = new Thread(Server.conBROW3);
         public static Byte[] bytes;
-        public static bool canWrite = false;
+        public static bool conBROW1canWrite = false;
+        public static bool conBROW2canWrite = false;
+        public static bool conBROW3canWrite = false;
 
         public static TcpClient client;
         public static TcpListener server = null;
@@ -60,7 +62,7 @@ namespace FaceID
                  */
                 while (true)
                 {
-                    Console.WriteLine("AGUARDANDO SOCKET...");
+                    Console.WriteLine("AGUARDANDO SOCKET...\n");
 
                     client = server.AcceptTcpClient();
                     stream = client.GetStream();
@@ -71,7 +73,7 @@ namespace FaceID
                     String data = Encoding.UTF8.GetString(bytes);
 
                     if ((new Regex("^GET").IsMatch(data)))
-                    {                       
+                    {
                         string statusResponse;
                         Byte[] response = Encoding.UTF8.GetBytes("HTTP/1.1 101 Switching Protocols" + Environment.NewLine
                         + "Connection: Upgrade" + Environment.NewLine
@@ -88,7 +90,7 @@ namespace FaceID
 
                         stream.Write(response, 0, response.Length);
                         statusResponse = System.Text.Encoding.ASCII.GetString(response, 0, response.Length);
-                                                
+
                         Console.WriteLine("[WS]: Conected");
 
                         if (new Regex("User-Agent").IsMatch(data))
@@ -99,15 +101,18 @@ namespace FaceID
                                 //BROWSER1 CONNECTION +++                                
                                 if (conBROW1Thread.IsAlive)
                                 {
-                                    streamBROW1 = null;
+                                    streamBROW1.Dispose();
                                     streamBROW1 = stream;
                                     stream = null;
-                                    Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString());                                    
+
+                                    Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString());
+                                    conBROW1canWrite = true;
                                 }
                                 else
                                 {
-                                    conBROW1Thread.Start();                                    
-                                    Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString());                                                                     
+                                    conBROW1Thread.Start();
+                                    Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString() + "\n");
+                                    conBROW1canWrite = true;
                                 }
                                 //BROWSER1 CONNECTION ---
                             }
@@ -118,15 +123,17 @@ namespace FaceID
                                     //BROWSER2 CONNECTION +++
                                     if (conBROW2Thread.IsAlive)
                                     {
-                                        streamBROW2 = null;
+                                        streamBROW2.Dispose();
                                         streamBROW2 = stream;
                                         stream = null;
                                         Console.WriteLine("conBROW2Thread Number: " + conBROW2Thread.GetHashCode().ToString());
+                                        conBROW2canWrite = true;
                                     }
                                     else
                                     {
                                         conBROW2Thread.Start();
                                         Console.WriteLine("conBROW2Thread Number: " + conBROW2Thread.GetHashCode().ToString());
+                                        conBROW2canWrite = true;
                                     }
                                     //BROWSER2 CONNECTION ---                                   
                                 }
@@ -135,15 +142,17 @@ namespace FaceID
                                     //BROWSER3 CONNECTION +++
                                     if (conBROW3Thread.IsAlive)
                                     {
-                                        streamBROW3 = null;
+                                        streamBROW3.Dispose();
                                         streamBROW3 = stream;
                                         stream = null;
                                         Console.WriteLine("conBROW3Thread Number: " + conBROW3Thread.GetHashCode().ToString());
+                                        conBROW3canWrite = true;
                                     }
                                     else
                                     {
                                         conBROW3Thread.Start();
                                         Console.WriteLine("conBROW3Thread Number: " + conBROW3Thread.GetHashCode().ToString());
+                                        conBROW3canWrite = true;
                                     }
                                     //BROWSER2 CONNECTION ---
                                 }
@@ -169,21 +178,15 @@ namespace FaceID
                     }
 
                 }
-                // Close everything.
-                //stream.Close();
-                //streamBROW1.Close();
-                //streamNJS.Close();
-                //client.Close();
-                server.Stop();
             }
-            catch (SocketException e)
+            catch// (System.IO.IOException e)
             {
-                Console.WriteLine("SocketException: {0}", e);
+                //Console.WriteLine("System.IO.IOException: {0}", e);
             }
-            finally
-            {
-                server.Stop();
-            }
+            /* finally
+             {
+                 //server.Stop();
+             }*/
 
             // informa e pausa o console para dar tempo de ler a exceção
             Console.WriteLine("\nPressione enter para continuar...");
@@ -205,14 +208,14 @@ namespace FaceID
             {
                 lengthRead = streamNJS.Read(bytes, 0, bytes.Length); //BLOCK
                 if (lengthRead != 0)
-                {                    
+                {
                     // translate bytes of request to string            
                     String data = Encoding.UTF8.GetString(bytes);
                     string msg = Converter.decodedStr(bytes, bytes.Length);
                     Console.WriteLine("BROWSER2: " + msg);
                 }
                 else
-                {                   
+                {
                     Thread.Sleep(2000);
                     Console.WriteLine("streamNJS OFF");
                 }
@@ -230,31 +233,42 @@ namespace FaceID
          * PARA SABER CHECAR THREADS COM MESMO DA EXECUTANDO A MESMA FUNÇÃO.         
          */
         public static void conBROW1()
-        {            
+        {
             Byte[] bytes = Server.bytes;
+            String data;
+            String msg;
             streamBROW1 = stream;
             stream = null;
-            canWrite = true;
+            //conBROW1canWrite = true;            
 
             while (true)
             {
-                ; //BLOCK
-                if (streamBROW1.Read(bytes, 0, bytes.Length) != 0)
+                try
                 {
-                    canWrite = true;
-                    // translate bytes of request to string            
-                    String data = Encoding.UTF8.GetString(bytes);
-                    string msg = Converter.decodedStr(bytes, bytes.Length);
-                    Console.WriteLine("BROWSER1: " + msg);
+                    if (streamBROW1.Read(bytes, 0, bytes.Length) != 0)
+                    {
+                        // translate bytes of request to string            
+                        data = Encoding.UTF8.GetString(bytes);
+                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        Actions.actions(msg);
+                    }
+                    else
+                    {
+                        if (conBROW1canWrite)
+                        {
+                            conBROW1canWrite = false;
+                            //Console.WriteLine("conBROW1canWrite WS: false");
+                            //Console.WriteLine("streamBROW1 OFF");
+                        }
+                        Thread.Sleep(3000);
+                    }
                 }
-                else
+                catch
                 {
-                    canWrite = false;
-                    Thread.Sleep(2000);
-                    Console.WriteLine("streamBROW1 OFF");
+                    Thread.Sleep(3000);
                 }
-
             }
+
         }
 
 
@@ -263,72 +277,149 @@ namespace FaceID
          */
         public static void conBROW2()
         {
-            int lengthRead;
             Byte[] bytes = Server.bytes;
+            String data;
+            String msg;
             streamBROW2 = stream;
             stream = null;
+            //conBROW1canWrite = true;            
 
             while (true)
             {
-                lengthRead = streamBROW2.Read(bytes, 0, bytes.Length); //BLOCK
-                if (lengthRead != 0)
+                try
                 {
-                    // translate bytes of request to string            
-                    String data = Encoding.UTF8.GetString(bytes);
-                    string msg = Converter.decodedStr(bytes, bytes.Length);
-                    Console.WriteLine("BROWSER2: " + msg);
+                    if (streamBROW2.Read(bytes, 0, bytes.Length) != 0)
+                    {
+                        // translate bytes of request to string            
+                        data = Encoding.UTF8.GetString(bytes);
+                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        Actions.actions(msg);
+                    }
+                    else
+                    {
+                        if (conBROW2canWrite)
+                        {
+                            conBROW2canWrite = false;
+                            //Console.WriteLine("conBROW2canWrite WS: false");
+                            //Console.WriteLine("streamBROW2 OFF");
+                        }
+                        Thread.Sleep(3000);
+                    }
                 }
-                else
+                catch
                 {
-                    Thread.Sleep(2000);
-                    Console.WriteLine("streamBROW2 OFF");
+                    Thread.Sleep(3000);
                 }
-
             }
+
         }
+
 
         /********************
-         * CONEXÃO BROWSER3
-         */
+        * CONEXÃO BROWSER3
+        */
         public static void conBROW3()
         {
-            int lengthRead;
             Byte[] bytes = Server.bytes;
+            String data;
+            String msg;
             streamBROW3 = stream;
             stream = null;
+            //conBROW1canWrite = true;            
 
             while (true)
             {
-                lengthRead = streamBROW3.Read(bytes, 0, bytes.Length); //BLOCK
-                if (lengthRead != 0)
+                try
                 {
-                    // translate bytes of request to string            
-                    String data = Encoding.UTF8.GetString(bytes);
-                    string msg = Converter.decodedStr(bytes, bytes.Length);
-                    Console.WriteLine("BROWSER3: " + msg);
+                    if (streamBROW3.Read(bytes, 0, bytes.Length) != 0)
+                    {
+                        // translate bytes of request to string            
+                        data = Encoding.UTF8.GetString(bytes);
+                        msg = Converter.decodedStr(bytes, bytes.Length);                        
+                        Actions.actions(msg);
+                    }
+                    else
+                    {
+                        if (conBROW3canWrite)
+                        {
+                            conBROW3canWrite = false;
+                            //Console.WriteLine("conBROW3canWrite WS: false");
+                            //Console.WriteLine("streamBROW3 OFF");
+                        }
+                        Thread.Sleep(3000);
+                    }
                 }
-                else
+                catch
                 {
-                    Thread.Sleep(2000);
-                    Console.WriteLine("streamBROW3 OFF");
+                    Thread.Sleep(3000);
                 }
-
             }
+
         }
 
 
-        public static void sendMsg(String mess)
+        public static void sendMsg(bool BROWSER1, bool BROWSER2, bool BROWSER3, String mess)
         {
-            Byte[] msgConverted = Converter.strToByte(mess);            
-            if (canWrite)
-             {                
-                streamBROW1.Write(msgConverted, 0, msgConverted.Length);
-                Console.WriteLine("canWrite WS: true");
+            Byte[] msgConverted = Converter.strToByte(mess);
+
+            //TRY SEND MSG BROWSER1+++
+            try
+            {
+                if (conBROW1canWrite && BROWSER1)
+                {
+                    streamBROW1.Write(msgConverted, 0, msgConverted.Length);
+                }
+                else
+                {
+                    //Console.WriteLine("conBROW1canWrite WS: false");
+                }
+
             }
-            else
-             {
-                 Console.WriteLine("canWrite WS: false");
-             }
+            catch
+            {
+                Console.WriteLine("Exception sendMsg BROWSER 111111111111111111111111");
+            }
+            //TRY SEND MSG BROWSER1---
+
+
+            //TRY SEND MSG BROWSER2+++
+            try
+            {
+                if (conBROW2canWrite && BROWSER2)
+                {
+                    streamBROW2.Write(msgConverted, 0, msgConverted.Length);
+                }
+                else
+                {
+                    //Console.WriteLine("conBROW1canWrite WS: false");
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine("Exception sendMsg BROWSER 222222222222222222222222");
+            }
+            //TRY SEND MSG BROWSER2---
+
+
+            //TRY SEND MSG BROWSER3+++
+            try
+            {
+                if (conBROW3canWrite && BROWSER3)
+                {
+                    streamBROW3.Write(msgConverted, 0, msgConverted.Length);
+                }
+                else
+                {
+                    //Console.WriteLine("conBROW3canWrite WS: false");
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine("Exception sendMsg BROWSER 333333333333333333333333");
+            }
+            //TRY SEND MSG BROWSER3---
 
         }
 
@@ -342,8 +433,9 @@ namespace FaceID
             int Y = 0;
             int W = 100;
             int H = 100;
+            String coords;
 
-            while (X<=301)
+            while (X <= 301)
             {
                 if (X == 300)
                 {
@@ -352,13 +444,15 @@ namespace FaceID
                 }
                 X++;
                 Y++;
-                Server.sendMsg(Y.ToString() + " " + X.ToString() + " " + W.ToString() + " " + H.ToString());
-                Thread.Sleep(50);
+                coords = Y.ToString() + " " + X.ToString() + " " + W.ToString() + " " + H.ToString();
+
+                Server.sendMsg(true, true, true, coords);
+                Thread.Sleep(100);
             }
         }
 
         public static void startTesteCanvasHTML()
-        {         
+        {
             Thread testeCanvasHTML_TH = new Thread(Server.testeCanvasHTML);
             testeCanvasHTML_TH.Start();
         }

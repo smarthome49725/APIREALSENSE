@@ -32,6 +32,43 @@ namespace FaceID
                 string s = cod.Replace("unregisterUser", "");
                 Console.WriteLine(s);
             }
+
+
+            /*if (new Regex("^LEVEL1:onrectON").IsMatch(cod))
+            {                
+                Console.WriteLine(cod);
+            }*/
+
+            switch (cod)
+            {
+                case "LEVEL1:rectON":
+                    Server.conBROW1canWrite = true;
+                    Console.WriteLine("switch LEVEL1:onrectON");
+                    break;
+                case "LEVEL2:rectON":
+                    Server.conBROW2canWrite = true;
+                    Console.WriteLine("switch LEVEL2:onrectON");
+                    break;
+                case "LEVEL3:rectON":
+                    Server.conBROW3canWrite = true;
+                    Console.WriteLine("switch LEVEL3:onrectON");
+                    break;
+                case "LEVEL1:rectOFF":
+                    Server.conBROW1canWrite = false;
+                    Console.WriteLine("switch LEVEL1:onrectOFF");
+                    break;
+                case "LEVEL2:rectOFF":
+                    Server.conBROW2canWrite = false;
+                    Console.WriteLine("switch LEVEL2:onrectOFF");
+                    break;
+                case "LEVEL3:rectOFF":
+                    Server.conBROW3canWrite = false;
+                    Console.WriteLine("switch LEVEL3:onrectOFF");
+                    break;
+            }
+
+
+
         }
 
         public static Usuario log(string json)
