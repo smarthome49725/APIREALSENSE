@@ -547,7 +547,7 @@ namespace FaceID
         private void configIP_Click(object sender, RoutedEventArgs e)
         {
             Server.ipAddress = IP.Text;             
-            //MessageBox.Show("ipAddress Configurado com: " + Server.ipAddress);
+            MessageBox.Show("ipAddress Configurado com: " + Server.ipAddress);
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -557,7 +557,7 @@ namespace FaceID
 
         private void sendCod_Click(object sender, RoutedEventArgs e)
         {            
-            //Server.sendMsg(cod.Text);
+            Server.sendMsg(0 ,cod.Text);
         }
 
         private void sendCoordCanvasHTML_Click(object sender, RoutedEventArgs e)

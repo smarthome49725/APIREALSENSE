@@ -47,7 +47,7 @@ namespace FaceID
          */
         public void StartServer()
         {
-            //MessageBox.Show("socket ok?");
+            MessageBox.Show("socket ok?");
             try
             {
                 Int32 port = 8080;
