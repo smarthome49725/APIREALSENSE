@@ -26,15 +26,17 @@ namespace FaceID
         public static NetworkStream streamBROW1;
         public static NetworkStream streamBROW2;
         public static NetworkStream streamBROW3;
-
+        
         public static Thread conNJSThread = new Thread(Server.conNJS);
         public static Thread conBROW1Thread = new Thread(Server.conBROW1);
         public static Thread conBROW2Thread = new Thread(Server.conBROW2);
         public static Thread conBROW3Thread = new Thread(Server.conBROW3);
+        String data;
         public static Byte[] bytes;
         public static bool conBROW1canWrite = false;
         public static bool conBROW2canWrite = false;
         public static bool conBROW3canWrite = false;
+        public static bool conNJScanWrite = false;
 
         public static TcpClient client;
         public static TcpListener server = null;
@@ -68,10 +70,10 @@ namespace FaceID
                     stream = client.GetStream();
 
                     while (!stream.DataAvailable) ;
+                    
                     bytes = new Byte[client.Available];
                     stream.Read(bytes, 0, bytes.Length);
-                    String data = Encoding.UTF8.GetString(bytes);
-
+                    data = Encoding.UTF8.GetString(bytes);                    
                     if ((new Regex("^GET").IsMatch(data)))
                     {
                         string statusResponse;
@@ -92,9 +94,7 @@ namespace FaceID
                         statusResponse = System.Text.Encoding.ASCII.GetString(response, 0, response.Length);
 
                         Console.WriteLine("[WS]: Conected");
-
-                        if (new Regex("User-Agent").IsMatch(data))
-                        {
+                        
                             //LEVEL'S                            
                             if (new Regex("level1").IsMatch(data)) //LEVEL 1
                             {
@@ -156,26 +156,28 @@ namespace FaceID
                                     }
                                     //BROWSER2 CONNECTION ---
                                 }
-                            }
-
-                        }
-                        else //NODEJS CONNECTION                               
-                        {
-                            if (conNJSThread.IsAlive)
-                            {
-                                streamNJS = null;
-                                streamNJS = stream;
-                                stream = null;
-                                Console.WriteLine("conNJSThread Number: " + conNJSThread.GetHashCode().ToString());
-                            }
-                            else
-                            {
-                                conNJSThread.Start();
-                                Console.WriteLine("conNJSThread Number: " + conNJSThread.GetHashCode().ToString());
-                            }
-
-                        }
+                            }                      
                     }
+                    else //net.socket != ^GET                              
+                    {
+                        if (conNJSThread.IsAlive)
+                        {
+                            streamNJS.Dispose();
+                            streamNJS = stream;
+                            stream = null;
+                            Console.WriteLine("conNJSThread Number: " + conNJSThread.GetHashCode().ToString());
+                            conNJScanWrite = true;
+                        }
+                        else
+                        {
+                            conNJSThread.Start();
+                            Console.WriteLine("conNJSThread Number: " + conNJSThread.GetHashCode().ToString());
+                            conNJScanWrite = true;
+                        }
+
+                    }//net.socket  
+
+
 
                 }
             }
@@ -195,31 +197,42 @@ namespace FaceID
 
 
         /*****************
-         * CONEXÃO NODEJS                               
-         */
+       * CONEXÃO NODEJS                               
+       */
         public static void conNJS()
         {
-            int lengthRead;
             Byte[] bytes = Server.bytes;
+            String data;
+            String msg;
             streamNJS = stream;
             stream = null;
 
             while (true)
             {
-                lengthRead = streamNJS.Read(bytes, 0, bytes.Length); //BLOCK
-                if (lengthRead != 0)
+                try
                 {
-                    // translate bytes of request to string            
-                    String data = Encoding.UTF8.GetString(bytes);
-                    string msg = Converter.decodedStr(bytes, bytes.Length);
-                    Console.WriteLine("BROWSER2: " + msg);
+                    if (streamNJS.Read(bytes, 0, bytes.Length) != 0)
+                    {
+                        // translate bytes of request to string            
+                        data = Encoding.UTF8.GetString(bytes);
+                        msg = Converter.decodedStr(bytes, bytes.Length);
+                        Actions.actions(msg);
+                    }
+                    else
+                    {
+                        if (conNJScanWrite)
+                        {
+                            conNJScanWrite = false;
+                            //Console.WriteLine("conBROW1canWrite WS: false");
+                            //Console.WriteLine("streamBROW1 OFF");
+                        }
+                        Thread.Sleep(1000);
+                    }
                 }
-                else
+                catch
                 {
-                    Thread.Sleep(2000);
-                    Console.WriteLine("streamNJS OFF");
+                    Thread.Sleep(1000);
                 }
-
             }
 
         }
@@ -238,8 +251,7 @@ namespace FaceID
             String data;
             String msg;
             streamBROW1 = stream;
-            stream = null;
-            //conBROW1canWrite = true;            
+            stream = null;                       
 
             while (true)
             {
@@ -281,8 +293,7 @@ namespace FaceID
             String data;
             String msg;
             streamBROW2 = stream;
-            stream = null;
-            //conBROW1canWrite = true;            
+            stream = null;                     
 
             while (true)
             {
@@ -324,8 +335,7 @@ namespace FaceID
             String data;
             String msg;
             streamBROW3 = stream;
-            stream = null;
-            //conBROW1canWrite = true;            
+            stream = null;                       
 
             while (true)
             {
@@ -360,58 +370,78 @@ namespace FaceID
 
         /******************************************************
          * SEND MSG FOR BROWSER:
-         * level == 1: send only for level 1
-         * level == 2: send only for level 2
-         * level == 3: send only for level 3
+         * level == 0: send only for Client NODEJS 
+         * level == 1: send only for user level 1
+         * level == 2: send only for user level 2
+         * level == 3: send only for user level 3
          * level == 255: send for broadcasting (1 and 2 and 3)
          */
         public static void sendMsg(int level, String mess)
         {
             Byte[] msgConverted = Converter.strToByte(mess);
 
+            //TRY SEND MSG NODEJS+++
+            if (level == 0 && conNJScanWrite)
+            {                
+                try
+                {
+                    Byte[] rawData = System.Text.ASCIIEncoding.UTF8.GetBytes(mess);
+                    streamNJS.Write(rawData, 0, rawData.Length);
+                    
+                }
+                catch
+                {
+                    conNJScanWrite = false;
+                    Console.WriteLine("Exception sendMsg NODEJS 000");
+                }                
+            }
+            //TRY SEND MSG NODEJS---
 
+            //TRY SEND MSG BROWSER1+++
             if (level == 1 || (level == 255 && conBROW1canWrite))
-            {
-                //TRY SEND MSG BROWSER1+++
+            {                
                 try
                 {
                     streamBROW1.Write(msgConverted, 0, msgConverted.Length);
                 }
                 catch
                 {
-                    Console.WriteLine("Exception sendMsg BROWSER 111");
-                }
-                //TRY SEND MSG BROWSER1---
+                    conBROW1canWrite = false;
+                    Console.WriteLine("Exception sendMsg BROWSER 111");                    
+                }                
             }
+            //TRY SEND MSG BROWSER1---
 
+            //TRY SEND MSG BROWSER2+++
             if (level == 2 || (level == 255 && conBROW2canWrite))
             {
-                //TRY SEND MSG BROWSER2+++
+                
                 try
                 {
                     streamBROW2.Write(msgConverted, 0, msgConverted.Length);
                 }
                 catch
                 {
+                    conBROW2canWrite = false;
                     Console.WriteLine("Exception sendMsg BROWSER 222");
-                }
-                //TRY SEND MSG BROWSER2---
+                }                
             }
+            //TRY SEND MSG BROWSER2---
 
+            //TRY SEND MSG BROWSER3+++
             if (level == 3 || (level == 255 && conBROW3canWrite))
-            {
-                //TRY SEND MSG BROWSER3+++
+            {                
                 try
                 {
                     streamBROW3.Write(msgConverted, 0, msgConverted.Length);
                 }
                 catch
                 {
+                    conBROW3canWrite = false;
                     Console.WriteLine("Exception sendMsg BROWSER 333");
-                }
-                //TRY SEND MSG BROWSER3---
+                }                
             }
-            
+            //TRY SEND MSG BROWSER3---
 
         }
 
@@ -451,9 +481,9 @@ namespace FaceID
             while (true)
             {
                 String msg = "TESTE ENVIANDO DADOS";
-                Server.sendMsg(1, msg);
+                Server.sendMsg(0, msg);
                 Console.WriteLine("TESTE ENVIANDO DADOS PARA O BROWSER");
-                //Thread.Sleep(5000);
+                Thread.Sleep(100);
             }
         }
 
