@@ -52,8 +52,7 @@ namespace FaceID
             {
                 Int32 port = 8080;
 
-                //IPAddress host = IPAddress.Parse(ipAddress);                
-                IPAddress host = IPAddress.Parse("192.168.42.132");
+                IPAddress host = IPAddress.Parse(ipAddress);                                
                 server = new TcpListener(host, port);
 
                 // Start listening for client requests.                
