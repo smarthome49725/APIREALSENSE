@@ -56,7 +56,7 @@ namespace FaceID
             Console.WriteLine("registerUser true");          
 
             Create create = new Create();
-            create.Adiciona(/*json.nome, json.tel, json.age*/);
+            //create.Adiciona(/*json.nome, json.tel, json.age*/);
         }
 
         static void unregisterUser()

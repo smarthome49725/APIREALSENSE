@@ -58,6 +58,7 @@ namespace FaceID
         private int faceRectangleWidth;
         private int faceRectangleX;
         private int faceRectangleY;
+        public static String coords;
 
 
 
@@ -90,11 +91,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            //-->ConfigureRealSense();
+            ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            //-->processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
         }
 
 
@@ -312,8 +313,8 @@ namespace FaceID
                             faceRectangleY = faceRectangle.y;
                             
                             //int faceRectangleX2 = (faceRectangleX - 510) * -1;
-                           
-                            //Server.sendMsg(faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString());
+
+                            
                           
                                
 
@@ -373,6 +374,9 @@ namespace FaceID
                  * 'ReleaseFrame' libera o bloqueio sobre o quadro atual. O processamento de frame continua.
                  */
                 senseManager.ReleaseFrame();
+
+                coords = faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString();
+                Server.sendMsg(255, "rect", coords, userId);
 
             }
         }
