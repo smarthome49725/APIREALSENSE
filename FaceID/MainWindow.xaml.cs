@@ -557,7 +557,7 @@ namespace FaceID
 
         private void sendCod_Click(object sender, RoutedEventArgs e)
         {            
-            Server.sendMsg(0 ,cod.Text);
+            Server.sendMsg(0, "PORT", cod.Text, "userID");
         }
 
         private void sendCoordCanvasHTML_Click(object sender, RoutedEventArgs e)

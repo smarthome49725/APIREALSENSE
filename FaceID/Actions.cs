@@ -47,7 +47,7 @@ namespace FaceID
             {
                 Server.conBROW3canWrite = codigo.rect;
             }
-            Server.sendMsg(codigo.level, "Rect level" + codigo.level + ": " + codigo.rect);       
+            //Server.sendMsg(codigo.level, "Rect level" + codigo.level + ": " + codigo.rect);       
             Console.WriteLine("Rect level" + codigo.level + ": " + codigo.rect);
         }
 

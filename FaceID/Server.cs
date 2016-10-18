@@ -15,6 +15,7 @@ using System.Security.Cryptography; //SH1
 using System.Net.WebSockets;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Newtonsoft.Json;
 
 
 namespace FaceID
@@ -41,6 +42,8 @@ namespace FaceID
         public static TcpClient client;
         public static TcpListener server = null;
         public static string ipAddress;
+
+        public static Code code = new Code();    
 
         /************************
          * START SERVICES
@@ -375,16 +378,22 @@ namespace FaceID
          * level == 3: send only for user level 3
          * level == 255: send for broadcasting (1 and 2 and 3)
          */
-        public static void sendMsg(int level, String mess)
+        public static void sendMsg(int level, String cod, String mess, String userId)        
         {
-            Byte[] msgConverted = Converter.strToByte(mess);
+            //PARSE JSON
+            code.code = cod;
+            code.mess = mess;
+            code.userId = userId;
+            var codeJSON = JsonConvert.SerializeObject(code);           
+
+            Byte[] msgConverted = Converter.strToByte(codeJSON);
 
             //TRY SEND MSG NODEJS+++
             if (level == 0 && conNJScanWrite)
             {                
                 try
                 {
-                    Byte[] rawData = System.Text.ASCIIEncoding.UTF8.GetBytes(mess);
+                    Byte[] rawData = System.Text.ASCIIEncoding.UTF8.GetBytes(codeJSON);
                     streamNJS.Write(rawData, 0, rawData.Length);
                     
                 }
@@ -455,6 +464,8 @@ namespace FaceID
             int W = 100;
             int H = 100;
             String coords;
+            String cod = "rect";
+            String userId = "100";
 
             while (X <= 301)
             {
@@ -466,8 +477,8 @@ namespace FaceID
                 X++;
                 Y++;
                 coords = Y.ToString() + " " + X.ToString() + " " + W.ToString() + " " + H.ToString();
-
-                Server.sendMsg(255, coords);
+                                                
+                Server.sendMsg(255, cod, coords, userId);
                 Thread.Sleep(100);
             }
         }
@@ -480,7 +491,7 @@ namespace FaceID
             while (true)
             {
                 String msg = "TESTE ENVIANDO DADOS";
-                Server.sendMsg(0, msg);
+                //Server.sendMsg(0, msg);
                 Console.WriteLine("TESTE ENVIANDO DADOS PARA O BROWSER");
                 Thread.Sleep(100);
             }
@@ -499,4 +510,12 @@ namespace FaceID
 
 
     }
+}
+
+
+class Code
+{
+    public string code { get; set; }
+    public string mess { get; set; }
+    public string userId { get; set; }
 }
