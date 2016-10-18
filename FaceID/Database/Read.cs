@@ -13,13 +13,16 @@ namespace FaceID.Database
         string fone = "Json.Fone";
         string nasc = "Json.Date";
 
-        static string strCn = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\DBAgenda.mdf;Integrated Security = True";
+        //VS2012
+        static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\SHDB.mdf;Integrated Security=True";
+        //vs2015
+        //static string strCn = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\SHDB.mdf;Integrated Security = True";
         SqlConnection conexao = new SqlConnection(strCn);
         SqlDataReader DR;
 
         private void Reader(string @string)
         {
-            string pesquisa = "select * from tbcontatos where name = " + @string;
+            string pesquisa = "SELECT * FROM tbusers WHERE Usuario = '"+@string+"' or LIKE '%"+@string.Substring(0, 3)+"%'";
             SqlCommand cmd = new SqlCommand(pesquisa, conexao);
             try
             {
@@ -27,19 +30,12 @@ namespace FaceID.Database
                 conexao.Open();
                 DR = cmd.ExecuteReader();
                 // Se houver um registro correspondente ao Id
-                if (DR.Read())
+                List<string> lista = new List<string>();
+                while (DR.Read())
                 {
-                    var id = DR.GetValue(0).ToString();
-                    var pNome = DR.GetValue(1).ToString();
-                    var pFone = DR.GetValue(2).ToString();
-                    var pMail = DR.GetValue(3).ToString();
+                    lista.Add(DR["Usuario"].ToString());
                 }
-                else
-                {
-                    Console.WriteLine("Registro não encontrado");
-                }
-                DR.Close();
-                cmd.Dispose();
+                Console.WriteLine("{0}", lista);
             }
             catch (Exception ex)
             {

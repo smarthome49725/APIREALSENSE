@@ -12,13 +12,16 @@ namespace FaceID.Database
         string nome = "Json.Nome";
         string fone = "Json.Fone";
         string nasc = "Json.Date";
-
-        static string strCn = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\DBAgenda.mdf;Integrated Security = True";
+        //VS2012
+        static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\SHDB.mdf;Integrated Security=True";
+        //vs2015
+        //static string strCn = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\SHDB.mdf;Integrated Security = True";
         SqlConnection conexao = new SqlConnection(strCn);
 
         private void Deletar()
         {
-            string deleta = "delete from tbcontatos where nome= " + nome;
+            string deleta = "delete * from tbuser where nome= " + nome;
+
             SqlCommand cmd = new SqlCommand(deleta, conexao);
 
             try
