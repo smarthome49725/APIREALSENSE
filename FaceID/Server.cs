@@ -56,7 +56,7 @@ namespace FaceID
                 Int32 port = 8080;
 
                 //IPAddress host = IPAddress.Parse(ipAddress);
-                IPAddress host = IPAddress.Parse("192.168.42.132");                
+                IPAddress host = IPAddress.Parse("10.101.33.125");                
                 server = new TcpListener(host, port);
 
                 // Start listening for client requests.                
@@ -72,11 +72,12 @@ namespace FaceID
                     client = server.AcceptTcpClient();
                     stream = client.GetStream();
 
-                    while (!stream.DataAvailable) ;
+                    while (!stream.DataAvailable);
                     
                     bytes = new Byte[client.Available];
                     stream.Read(bytes, 0, bytes.Length);
-                    data = Encoding.UTF8.GetString(bytes);                    
+                    data = Encoding.UTF8.GetString(bytes);
+                    Console.WriteLine(data);                 
                     if ((new Regex("^GET").IsMatch(data)))
                     {
                         string statusResponse;
@@ -209,16 +210,16 @@ namespace FaceID
             String msg;
             streamNJS = stream;
             stream = null;
+            int msgLength;
 
             while (true)
             {
                 try
                 {
-                    if (streamNJS.Read(bytes, 0, bytes.Length) != 0)
+                    if ((msgLength = streamNJS.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // translate bytes of request to string            
-                        data = Encoding.UTF8.GetString(bytes);
-                        //msg = Converter.decodedStr(bytes, bytes.Length);
+                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, msgLength);                        
                         Actions.actions(data);
                     }
                     else
