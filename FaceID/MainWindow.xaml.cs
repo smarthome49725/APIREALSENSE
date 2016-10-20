@@ -44,16 +44,16 @@ namespace FaceID
         private PXCMSenseManager senseManager;
         //Cria variável para configurar o algoritmo de reconhecimento faical
         private PXCMFaceConfiguration.RecognitionConfiguration recognitionConfig;
-        private PXCMFaceData faceData;
+        public static PXCMFaceData faceData;
         private PXCMFaceData.RecognitionData recognitionData;
         private Int32 numFacesDetected;//Guarda o número de faces detectadas
         private string userId;
-        private string dbState;
+        public static string dbState;
         private const int DatabaseUsers = 10; //Numero máximo de usuários suportado pelo banco de dados        
         private const string DatabaseName = "UserDB"; //Nome do banco de dados
         private const string DatabaseFilename = "database.bin"; //Nome do arquivo do banco de dados
-        private bool doRegister;
-        private bool doUnregister;
+        public static bool doRegister;
+        public static bool doUnregister;
         private int faceRectangleHeight;
         private int faceRectangleWidth;
         private int faceRectangleX;
@@ -91,11 +91,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            //-->ConfigureRealSense();
+            ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            //-->processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
         }
 
 
@@ -213,7 +213,7 @@ namespace FaceID
 
 
 
-        private void SaveDatabaseToFile()
+        public static void SaveDatabaseToFile()
         {
             // Allocate the buffer to save the database
             PXCMFaceData.RecognitionModuleData recognitionModuleData = faceData.QueryRecognitionModule();

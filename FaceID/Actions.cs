@@ -18,7 +18,7 @@ namespace FaceID
 
             Console.WriteLine(cod);
             codigo = JsonConvert.DeserializeObject<Codigo>(cod);
-                        
+
             switch (codigo.cod)
             {
                 case "rect":
@@ -30,6 +30,16 @@ namespace FaceID
                 case "unregisterUser":
                     unregisterUser();
                     break;
+                case "geniduser":
+                    MainWindow.doRegister = true;
+                    Console.WriteLine("doRegister");
+                    break;
+                case "rmiduser":
+                    MainWindow.doUnregister = true;
+                    Console.WriteLine("doUnregister");
+                    break;
+             
+
             }
         }
 
@@ -53,18 +63,18 @@ namespace FaceID
 
         static void registerUser()
         {
-            Console.WriteLine("registerUser true");          
-
-            Create create = new Create();
+            Console.WriteLine("registerUser true");
+            MainWindow.SaveDatabaseToFile();
+            //Create create = new Create();
             //create.Adiciona(/*json.nome, json.tel, json.age*/);
         }
 
         static void unregisterUser()
         {
-            Console.WriteLine("unregisterUser");            
+            Console.WriteLine("unregisterUser");
         }
 
-        
+
     }
 }
 
