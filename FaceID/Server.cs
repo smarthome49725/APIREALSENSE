@@ -56,7 +56,7 @@ namespace FaceID
                 Int32 port = 8080;
 
                 //IPAddress host = IPAddress.Parse(ipAddress);
-                IPAddress host = IPAddress.Parse("10.88.112.51");                
+                IPAddress host = IPAddress.Parse("192.168.42.132");                
                 server = new TcpListener(host, port);
 
                 // Start listening for client requests.                
@@ -218,8 +218,8 @@ namespace FaceID
                     {
                         // translate bytes of request to string            
                         data = Encoding.UTF8.GetString(bytes);
-                        msg = Converter.decodedStr(bytes, bytes.Length);
-                        Actions.actions(msg);
+                        //msg = Converter.decodedStr(bytes, bytes.Length);
+                        Actions.actions(data);
                     }
                     else
                     {
@@ -379,11 +379,11 @@ namespace FaceID
          * level == 3: send only for user level 3
          * level == 255: send for broadcasting (1 and 2 and 3)
          */
-        public static void sendMsg(int level, String cod, String mess, String userId)        
+        public static void sendMsg(int level, String cod, String msg, String userId)        
         {
             //PARSE JSON
             code.code = cod;
-            code.mess = mess;
+            code.msg = msg;
             code.userId = userId;
             var codeJSON = JsonConvert.SerializeObject(code);           
 
@@ -517,6 +517,6 @@ namespace FaceID
 class Code
 {
     public string code { get; set; }
-    public string mess { get; set; }
+    public string msg { get; set; }
     public string userId { get; set; }
 }

@@ -29,6 +29,7 @@
                 <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="0" Margin="165,0,0,0" Width="1"/>
                 <Button x:Name="configIP" Content="Configura IP" Click="configIP_Click"/>
                 <TextBox x:Name="cod" Height="23" TextWrapping="Wrap" Text="Codigo" TextChanged="textBox_TextChanged"/>
+                <TextBox x:Name="msg" Height="22" TextWrapping="Wrap" Text="msg"/>
                 <Button x:Name="sendCod" Content="Enviar Código -> NODEJS" Click="sendCod_Click"/>
                 <Button x:Name="sendCoordCanvasHTML" Content="Send Coord Canvas HTML" Click="sendCoordCanvasHTML_Click"/>
 

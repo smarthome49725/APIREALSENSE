@@ -68,7 +68,6 @@ C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\FaceID.exe
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\FaceID.pdb
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.dll
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.SqlServer.dll
-C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\libpxcclr.cs.dll
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\Newtonsoft.Json.dll
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.dll
 C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.EF6.dll

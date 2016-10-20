@@ -91,11 +91,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            ConfigureRealSense();
+            //-->ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            //-->processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
         }
 
 
@@ -561,7 +561,7 @@ namespace FaceID
 
         private void sendCod_Click(object sender, RoutedEventArgs e)
         {            
-            Server.sendMsg(0, "PORT", cod.Text, "userID");
+            Server.sendMsg(0, cod.Text, msg.Text, "userID");
         }
 
         private void sendCoordCanvasHTML_Click(object sender, RoutedEventArgs e)
