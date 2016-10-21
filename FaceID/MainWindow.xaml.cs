@@ -39,11 +39,11 @@ namespace FaceID
 
 
 
-        private Thread processingThread;
+        public static Thread processingThread;
         //Cria uma variável do tipo 'PXCMSenseManager' para interface com algoritmos pré-definidos ex: Reconhecimento facial         
-        private PXCMSenseManager senseManager;
+        public static PXCMSenseManager senseManager;
         //Cria variável para configurar o algoritmo de reconhecimento faical
-        private PXCMFaceConfiguration.RecognitionConfiguration recognitionConfig;
+        public static PXCMFaceConfiguration.RecognitionConfiguration recognitionConfig;
         public static PXCMFaceData faceData;
         private PXCMFaceData.RecognitionData recognitionData;
         private Int32 numFacesDetected;//Guarda o número de faces detectadas
@@ -91,12 +91,16 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            ConfigureRealSense();
+            //////ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            //////processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+
+           
         }
+
+        
 
 
 
@@ -107,7 +111,7 @@ namespace FaceID
 
 
 
-        private void ConfigureRealSense() //Configura o pipeline para processamento
+        public static void ConfigureRealSense() //Configura o pipeline para processamento
         {
             /* Start the SenseManager and session  
              * Cria a instancia de PXCMSenseManager em senseManager para 
@@ -187,7 +191,7 @@ namespace FaceID
 
         //--------------------------------------------------------LoadDatabaseFromFile------------------------------------------------------------------------------------------------
              
-        private void LoadDatabaseFromFile()
+        public static void LoadDatabaseFromFile()
         {
             if (File.Exists(DatabaseFilename)) //Verifica se existe o arquivo do banco de dados no diretório corrente
             {
@@ -268,116 +272,123 @@ namespace FaceID
              * 'AcquireFrame(true)' Pausa o processamento de frame, lê o frame atual e salva em algum local que é acessado pela função 'QuerySample()'.
              *  Mais abaixo o processamento de frame é liberado com a função 'ReleaseFrame()'
              */
-
-            while (senseManager.AcquireFrame(true) >= pxcmStatus.PXCM_STATUS_NO_ERROR)
+            try
             {
-                /* Acquire the color image data
-                 * Consulta a sample (imagem salva com a chamada da função 'AcquireFrame(true)')
-                 * e Atribui para a variável sample(amostra) (Dados na forma Bruta)
-                 */
-                PXCMCapture.Sample sample = senseManager.QuerySample();
-
-                /* Cria uma variável que é uma estrutura apropriada para receber a um tipo de imagem. No caso a imagem bruta recebida
-                 * pela função 'AcquireFrame()' e convertida pela função 'color.AcquireAccess()'
-                 */
-                PXCMImage.ImageData colorData;
-                /* Converte a imagem(dados brutos) retornada para Sample e salva na estrutura de 
-                 * imagem ImageData por meio o ultimo parâmetro da função 'color.AcquireAccess(out colorData)' 
-                 */
-                sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, PXCMImage.PixelFormat.PIXEL_FORMAT_RGB24, out colorData);
-
-                /* Converte para Bitmap
-                 */
-                Bitmap colorBitmap = colorData.ToBitmap(0, sample.color.info.width, sample.color.info.height);
-
-                // Get face data
-                if (faceData != null)
+                while (senseManager.AcquireFrame(true) >= pxcmStatus.PXCM_STATUS_NO_ERROR)
                 {
-                    faceData.Update();
-                    numFacesDetected = faceData.QueryNumberOfDetectedFaces();
+                    /* Acquire the color image data
+                     * Consulta a sample (imagem salva com a chamada da função 'AcquireFrame(true)')
+                     * e Atribui para a variável sample(amostra) (Dados na forma Bruta)
+                     */
+                    PXCMCapture.Sample sample = senseManager.QuerySample();
 
-                    if (numFacesDetected > 0)
+                    /* Cria uma variável que é uma estrutura apropriada para receber a um tipo de imagem. No caso a imagem bruta recebida
+                     * pela função 'AcquireFrame()' e convertida pela função 'color.AcquireAccess()'
+                     */
+                    PXCMImage.ImageData colorData;
+                    /* Converte a imagem(dados brutos) retornada para Sample e salva na estrutura de 
+                     * imagem ImageData por meio o ultimo parâmetro da função 'color.AcquireAccess(out colorData)' 
+                     */
+                    sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, PXCMImage.PixelFormat.PIXEL_FORMAT_RGB24, out colorData);
+
+                    /* Converte para Bitmap
+                     */
+                    Bitmap colorBitmap = colorData.ToBitmap(0, sample.color.info.width, sample.color.info.height);
+
+                    // Get face data
+                    if (faceData != null)
                     {
-                        // Get the first face detected (index 0)
-                        PXCMFaceData.Face face = faceData.QueryFaceByIndex(0);
+                        faceData.Update();
+                        numFacesDetected = faceData.QueryNumberOfDetectedFaces();
 
-                        // Retrieve face location data
-                        PXCMFaceData.DetectionData faceDetectionData = face.QueryDetection();
-                        if (faceDetectionData != null)
+                        if (numFacesDetected > 0)
                         {
-                            PXCMRectI32 faceRectangle;
-                            faceDetectionData.QueryBoundingRect(out faceRectangle);
-                            faceRectangleHeight = faceRectangle.h;
-                            faceRectangleWidth = faceRectangle.w;
-                            faceRectangleX = faceRectangle.x;
-                            faceRectangleY = faceRectangle.y;
-                            
-                            //int faceRectangleX2 = (faceRectangleX - 510) * -1;
+                            // Get the first face detected (index 0)
+                            PXCMFaceData.Face face = faceData.QueryFaceByIndex(0);
 
-                            
-                          
-                               
-
-                             
-                        }
-
-                        // Process face recognition data
-                        if (face != null)
-                        {
-                            // Retrieve the recognition data instance
-                            recognitionData = face.QueryRecognition();
-
-                            // Set the user ID and process register/unregister logic
-                            if (recognitionData.IsRegistered())
+                            // Retrieve face location data
+                            PXCMFaceData.DetectionData faceDetectionData = face.QueryDetection();
+                            if (faceDetectionData != null)
                             {
-                                userId = Convert.ToString(recognitionData.QueryUserID());
+                                PXCMRectI32 faceRectangle;
+                                faceDetectionData.QueryBoundingRect(out faceRectangle);
+                                faceRectangleHeight = faceRectangle.h;
+                                faceRectangleWidth = faceRectangle.w;
+                                faceRectangleX = faceRectangle.x;
+                                faceRectangleY = faceRectangle.y;
 
-                                if (doUnregister)
-                                {
-                                    recognitionData.UnregisterUser();
-                                    doUnregister = false;
-                                }
+                                //int faceRectangleX2 = (faceRectangleX - 510) * -1;
+
+
+
+
+
+
                             }
-                            else
+
+                            // Process face recognition data
+                            if (face != null)
                             {
-                                if (doRegister)
+                                // Retrieve the recognition data instance
+                                recognitionData = face.QueryRecognition();
+
+                                // Set the user ID and process register/unregister logic
+                                if (recognitionData.IsRegistered())
                                 {
-                                    recognitionData.RegisterUser();
+                                    userId = Convert.ToString(recognitionData.QueryUserID());
 
-                                    // Capture a jpg image of registered user
-                                    colorBitmap.Save("image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                                    doRegister = false;
+                                    if (doUnregister)
+                                    {
+                                        recognitionData.UnregisterUser();
+                                        doUnregister = false;
+                                    }
                                 }
                                 else
                                 {
-                                    userId = "Unrecognized";
+                                    if (doRegister)
+                                    {
+                                        recognitionData.RegisterUser();
+
+                                        // Capture a jpg image of registered user
+                                        colorBitmap.Save("image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                                        doRegister = false;
+                                    }
+                                    else
+                                    {
+                                        userId = "Unrecognized";
+                                    }
                                 }
                             }
                         }
+                        else
+                        {
+                            userId = "No users in view";
+                        }
                     }
-                    else
-                    {
-                        userId = "No users in view";
-                    }
+
+                    // Display the color stream and other UI elements
+                    UpdateUI(colorBitmap);
+
+                    // Release resources
+                    colorBitmap.Dispose();
+                    sample.color.ReleaseAccess(colorData);
+                    sample.color.Dispose();
+
+                    /* Release the frame
+                     * 'ReleaseFrame' libera o bloqueio sobre o quadro atual. O processamento de frame continua.
+                     */
+                    senseManager.ReleaseFrame();
+
+                    coords = faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString();
+                    Server.sendMsg(255, "rect", coords, userId);
+
                 }
 
-                // Display the color stream and other UI elements
-                UpdateUI(colorBitmap);
-
-                // Release resources
-                colorBitmap.Dispose();
-                sample.color.ReleaseAccess(colorData);
-                sample.color.Dispose();
-
-                /* Release the frame
-                 * 'ReleaseFrame' libera o bloqueio sobre o quadro atual. O processamento de frame continua.
-                 */
-                senseManager.ReleaseFrame();
-
-                coords = faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString();
-                Server.sendMsg(255, "rect", coords, userId);
-
+            }
+            catch
+            {
+                Console.WriteLine("ERRORRRRRRRRRRRRRRRRRRRRRR");
             }
         }
 

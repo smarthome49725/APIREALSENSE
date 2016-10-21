@@ -21,7 +21,7 @@ namespace FaceID
 
             switch (codigo.cod)
             {
-                case "rect":
+                case "rect":                    
                     rect();
                     break;
                 case "registerUser":
@@ -48,6 +48,11 @@ namespace FaceID
             if (codigo.level == 1)
             {
                 Server.conBROW1canWrite = codigo.rect;
+                if(codigo.rect)
+                {
+                    MainWindow.ConfigureRealSense();
+                    MainWindow.processingThread.Start();
+                }
             }
             if (codigo.level == 2)
             {
