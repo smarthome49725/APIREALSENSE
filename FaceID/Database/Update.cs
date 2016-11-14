@@ -1,48 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FaceID.Database
+namespace FaceID
 {
     class Update
     {
-        string nome = "Json.Nome";
-        string fone = "Json.Fone";
-        string nasc = "Json.Date";
-        string mail = "Json.Mail";
 
-        static string strCn = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\DBAgenda.mdf;Integrated Security = True";
-        SqlConnection conexao = new SqlConnection(strCn);
+        //VS2012
+        //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
+        //vs2015
+        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";                
 
-        private void Altera()
+        public void Alterar(int userID, string nome, string fone, string nasc, string email)
         {
+            string commandText = "UPDATE tbusers SET Nome=@nome, Tel=@fone, Nasc=@nasc, Email= @email) WHERE userID=@userID";
 
-            string altera = "update tbcontatos set Nome= '" + nome + "', Fone= '" + fone + "', Email= '" + mail + "where nome=" + nome;
-
-            SqlCommand cmd = new SqlCommand(altera, conexao);
-            try
+            using (SqlConnection connection = new SqlConnection(strCn))
             {
-                conexao.Open();
-                int resultado;
-                resultado = cmd.ExecuteNonQuery();
+                SqlCommand command = new SqlCommand(commandText, connection);
 
-                if (resultado == 1)
+                command.Parameters.Add("@userID", SqlDbType.Int);
+                command.Parameters["@userID"].Value = userID;
+
+                command.Parameters.Add("@nome", SqlDbType.VarChar);
+                command.Parameters["@nome"].Value = nome;
+
+                command.Parameters.Add("@fone", SqlDbType.VarChar);
+                command.Parameters["@fone"].Value = fone;
+
+                command.Parameters.Add("@nasc", SqlDbType.VarChar);
+                command.Parameters["@nasc"].Value = nasc;
+
+                command.Parameters.Add("@email", SqlDbType.VarChar);
+                command.Parameters["@email"].Value = email;
+
+                try
                 {
-                    Console.WriteLine("Registro alterado com sucesso");
+                    connection.Open();
+                    Int32 rowsAffected = command.ExecuteNonQuery();
+                    Console.WriteLine("RowsAffected: {0}", rowsAffected);
                 }
-                cmd.Dispose();
-            }
-            catch (Exception ex)
-            {
-                //exiba qual é o erro
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                conexao.Close();
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }

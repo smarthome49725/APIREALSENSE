@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using FaceID.Database;
+using FaceID;
 
 namespace FaceID
 {
@@ -36,9 +36,13 @@ namespace FaceID
                     break;
                 case "rmiduser":
                     MainWindow.doUnregister = true;
-                    Console.WriteLine("doUnregister");
+                    Console.WriteLine("doUnregister");                
                     break;
-             
+                case "getuser":                    
+                    LoadUser(0);
+                    Console.WriteLine("READ USER-FINAL");                    
+                    break;
+
 
             }
         }
@@ -52,6 +56,8 @@ namespace FaceID
                 {
                     MainWindow.ConfigureRealSense();
                     MainWindow.processingThread.Start();
+                    
+                    
                 }
             }
             if (codigo.level == 2)
@@ -69,9 +75,9 @@ namespace FaceID
         static void registerUser()
         {
             Console.WriteLine("registerUser true");
-            MainWindow.SaveDatabaseToFile();
-            //Create create = new Create();
-            //create.Adiciona(/*json.nome, json.tel, json.age*/);
+            //MainWindow.SaveDatabaseToFile();
+            Create create = new Create();
+            create.Adiciona(codigo.nome, codigo.tel, codigo.nasc, codigo.email);
         }
 
         static void unregisterUser()
@@ -80,7 +86,17 @@ namespace FaceID
         }
 
 
+        public static void LoadUser(int userId)
+        {            
+            Read reader = new Read();
+            String userJSON = reader.Reader(userId, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+            //Console.WriteLine(userJSON);
+            
+            Server.sendMsg(255, "userData", userJSON, "");
+        }
     }
+
+
 }
 
 class Codigo
@@ -92,7 +108,7 @@ class Codigo
 
     public string nome { get; set; }
     public string tel { get; set; }
-    public string age { get; set; }
+    public string nasc { get; set; }
     public string email { get; set; }
 
 }

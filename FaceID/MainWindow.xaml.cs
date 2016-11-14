@@ -47,7 +47,7 @@ namespace FaceID
         public static PXCMFaceData faceData;
         private PXCMFaceData.RecognitionData recognitionData;
         private Int32 numFacesDetected;//Guarda o número de faces detectadas
-        private string userId;
+        public static string userId;
         public static string dbState;
         private const int DatabaseUsers = 10; //Numero máximo de usuários suportado pelo banco de dados        
         private const string DatabaseName = "UserDB"; //Nome do banco de dados
@@ -122,7 +122,7 @@ namespace FaceID
             /* Enable the color stream
              * Habilita a transmissão de cor
              */
-            ////////////////senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 30);
+            ///////senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 30);
 
             /* Enable the face module
              * Ativa o Rastreamento de face no pipeline
@@ -336,6 +336,7 @@ namespace FaceID
                                 if (recognitionData.IsRegistered())
                                 {
                                     userId = Convert.ToString(recognitionData.QueryUserID());
+                                    Actions.LoadUser(Convert.ToInt16(userId));//carrega usuario a partir do us
 
                                     if (doUnregister)
                                     {
@@ -572,7 +573,7 @@ namespace FaceID
 
         private void sendCod_Click(object sender, RoutedEventArgs e)
         {            
-            Server.sendMsg(0, cod.Text, msg.Text, "userID");
+            Server.sendMsg(255, cod.Text, msg.Text, "userID");
         }
 
         private void sendCoordCanvasHTML_Click(object sender, RoutedEventArgs e)

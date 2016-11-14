@@ -1,54 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FaceID.Database
+namespace FaceID
 {
     class Delete
     {
-        string nome = "Json.Nome";
-        string fone = "Json.Fone";
-        string nasc = "Json.Date";
+
         //VS2012
-        static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\SHDB.mdf;Integrated Security=True";
+        //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
-        //static string strCn = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\SHDB.mdf;Integrated Security = True";
-        SqlConnection conexao = new SqlConnection(strCn);
+        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";            
 
-        private void Deletar()
+        public void Deletar(int userID)
         {
-            string deleta = "delete * from tbuser where nome= " + nome;
+            string commandText = "DELETE * FROM tbusers WHERE userID=@userID";
 
-            SqlCommand cmd = new SqlCommand(deleta, conexao);
-
-            try
+            using (SqlConnection connection = new SqlConnection(strCn))
             {
-                // Abrindo a conexão com o banco
-                conexao.Open();
-                // Criando uma variável para adicionar e armazenar o resultado
-                int resultado;
-                var op = Console.ReadLine();
-                if (op.ToLower() == "s")
+                SqlCommand command = new SqlCommand(commandText, connection);
+
+                command.Parameters.Add("@userID", SqlDbType.Int);
+                command.Parameters["@userID"].Value = userID;
+
+                try
                 {
-                    resultado = cmd.ExecuteNonQuery();
-                    if (resultado == 1)
-                    {
-                        Console.WriteLine("Registro removido com sucesso");
-                    }
-                    cmd.Dispose();
+                    connection.Open();
+                    Int32 rowsAffected = command.ExecuteNonQuery();
+                    Console.WriteLine("RowsAffected: {0}", rowsAffected);
                 }
-            }
-            catch (Exception ex)
-            {
-                //exiba qual é o erro
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                conexao.Close();
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }
