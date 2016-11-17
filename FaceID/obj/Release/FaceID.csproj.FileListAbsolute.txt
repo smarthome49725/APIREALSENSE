@@ -142,3 +142,33 @@ C:\Users\Adriano\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.csproj.Gen
 C:\Users\ADM\Documents\SH2\Nova pasta\APIREALSENSE\FaceID\bin\Release\FaceID.exe.config
 C:\Users\ADM\Documents\SH2\Nova pasta\APIREALSENSE\FaceID\obj\Release\FaceID.exe
 C:\Users\ADM\Documents\SH2\Nova pasta\APIREALSENSE\FaceID\obj\Release\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\old-16-11-16APIREALSENSE\FaceID\bin\Release\FaceID.exe.config
+C:\Users\Mostratec\Documents\SH2\old-16-11-16APIREALSENSE\FaceID\obj\Release\FaceID.exe
+C:\Users\Mostratec\Documents\SH2\old-16-11-16APIREALSENSE\FaceID\obj\Release\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\FaceID.exe.config
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.exe
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\x86\sqlite3.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\x64\sqlite3.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\FaceID.exe
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\FaceID.pdb
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\libpxcclr.cs.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\Newtonsoft.Json.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.xml
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\Newtonsoft.Json.xml
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Release\System.Data.SQLite.xml
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.csprojResolveAssemblyReference.cache
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\MainWindow.baml
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\MainWindow.g.cs
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\App.g.cs
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID_Content.g.cs
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID_MarkupCompile.cache
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.g.resources
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.Properties.Resources.resources
+C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\obj\Release\FaceID.csproj.GenerateResource.Cache

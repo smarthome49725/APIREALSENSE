@@ -59,6 +59,7 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         public static String coords;
+        public static string flagUserId = null;
 
 
 
@@ -336,7 +337,13 @@ namespace FaceID
                                 if (recognitionData.IsRegistered())
                                 {
                                     userId = Convert.ToString(recognitionData.QueryUserID());
-                                    Actions.LoadUser(Convert.ToInt16(userId));//carrega usuario a partir do us
+                                    
+                                    if (flagUserId != userId)
+                                    {
+                                        Actions.LoadUser(Convert.ToInt16(userId));//carrega usuario a partir do us
+                                        flagUserId = userId;
+                                    }
+                                    
 
                                     if (doUnregister)
                                     {
@@ -357,14 +364,14 @@ namespace FaceID
                                     }
                                     else
                                     {
-                                        userId = "Unrecognized";
+                                        userId = "Unrecognized";                                        
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            userId = "No users in view";
+                            userId = "No users in view";                            
                         }
                     }
 

@@ -58,8 +58,6 @@ C:\Users\Mostratec\Documents\SH2\homologacao\APIREALSENSE\FaceID\obj\Debug\FaceI
 C:\Users\Mostratec\Documents\SH2\homologacao\APIREALSENSE\FaceID\obj\Debug\FaceID.csproj.GenerateResource.Cache
 C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\x86\sqlite3.dll
 C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\x64\sqlite3.dll
-C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\DataBase.mdf
-C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\DataBase_log.ldf
 C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\EntityFramework.dll
 C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\bin\Debug\Newtonsoft.Json.dll

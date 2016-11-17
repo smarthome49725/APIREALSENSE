@@ -14,15 +14,18 @@ namespace FaceID
         //VS2012
         //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
-        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\SHDB.mdf;Integrated Security = True";       
+        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
                
-        public void Adiciona(string nome, string fone, string nasc, string email)
+        public void Adiciona(int userID, string nome, string fone, string nasc, string email)
         {            
-            string commandText = "INSERT INTO tbusers (Nome, Tel, Nasc, Email) VALUES (@nome, @fone, @nasc, @email)";                   
+            string commandText = "INSERT INTO tbusers (userID, Nome, Tel, Nasc, Email) VALUES (@userID, @nome, @fone, @nasc, @email)";                   
 
             using (SqlConnection connection = new SqlConnection(strCn))
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
+
+                command.Parameters.Add("@userID", SqlDbType.VarChar);
+                command.Parameters["@userID"].Value = userID;
 
                 command.Parameters.Add("@nome", SqlDbType.VarChar);
                 command.Parameters["@nome"].Value = nome;
@@ -46,6 +49,8 @@ namespace FaceID
                 {
                     Console.WriteLine(ex.Message);
                 }
+                connection.Close();
+                connection.Dispose();
             }
         }
     }

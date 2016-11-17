@@ -27,7 +27,7 @@ namespace FaceID
         public static NetworkStream streamBROW1;
         public static NetworkStream streamBROW2;
         public static NetworkStream streamBROW3;
-        
+
         public static Thread conNJSThread = new Thread(Server.conNJS);
         public static Thread conBROW1Thread = new Thread(Server.conBROW1);
         public static Thread conBROW2Thread = new Thread(Server.conBROW2);
@@ -43,7 +43,7 @@ namespace FaceID
         public static TcpListener server = null;
         public static string ipAddress;
 
-        public static Code code = new Code();    
+        public static Code code = new Code();
 
         /************************
          * START SERVICES
@@ -56,7 +56,7 @@ namespace FaceID
                 Int32 port = 8080;
 
                 //IPAddress host = IPAddress.Parse(ipAddress);
-                IPAddress host = IPAddress.Parse("192.168.1.2");                
+                IPAddress host = IPAddress.Parse("192.168.10.121");
                 server = new TcpListener(host, port);
 
                 // Start listening for client requests.                
@@ -72,12 +72,12 @@ namespace FaceID
                     client = server.AcceptTcpClient();
                     stream = client.GetStream();
 
-                    while (!stream.DataAvailable);
-                    
+                    while (!stream.DataAvailable) ;
+
                     bytes = new Byte[client.Available];
                     stream.Read(bytes, 0, bytes.Length);
                     data = Encoding.UTF8.GetString(bytes);
-                    Console.WriteLine(data);                 
+                    Console.WriteLine(data);
                     if ((new Regex("^GET").IsMatch(data)))
                     {
                         string statusResponse;
@@ -98,69 +98,81 @@ namespace FaceID
                         statusResponse = System.Text.Encoding.ASCII.GetString(response, 0, response.Length);
 
                         Console.WriteLine("[WS]: Conected");
-                        
-                            //LEVEL'S                            
-                            if (new Regex("level1").IsMatch(data)) //LEVEL 1
-                            {
-                                //BROWSER1 CONNECTION +++                                
-                                if (conBROW1Thread.IsAlive)
-                                {
-                                    streamBROW1.Dispose();
-                                    streamBROW1 = stream;
-                                    stream = null;
 
-                                    Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString());
-                                    conBROW1canWrite = true;
-                                }
-                                else
-                                {
-                                    conBROW1Thread.Start();
-                                    Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString() + "\n");
-                                    conBROW1canWrite = true;
-                                }
-                                //BROWSER1 CONNECTION ---
+                        //LEVEL'S                            
+                        if (new Regex("level1").IsMatch(data)) //LEVEL 1
+                        {
+                            //BROWSER1 CONNECTION +++                                
+                            if (conBROW1Thread.IsAlive)
+                            {
+                                streamBROW1.Dispose();
+                                streamBROW1 = stream;
+                                stream = null;
+
+                                Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString());
+                                conBROW1canWrite = true;
+                                MainWindow.flagUserId = "modifyed";
+                                Console.WriteLine("flagUserId = modifyed");
                             }
                             else
                             {
-                                if (new Regex("level2").IsMatch(data)) //LEVEL 2
+                                conBROW1Thread.Start();
+                                Console.WriteLine("conBROW1Thread Number: " + conBROW1Thread.GetHashCode().ToString() + "\n");
+                                conBROW1canWrite = true;
+                                MainWindow.flagUserId = "modifyed";
+                                Console.WriteLine("flagUserId = modifyed");
+                            }
+                            //BROWSER1 CONNECTION ---
+                        }
+                        else
+                        {
+                            if (new Regex("level2").IsMatch(data)) //LEVEL 2
+                            {
+                                //BROWSER2 CONNECTION +++
+                                if (conBROW2Thread.IsAlive)
                                 {
-                                    //BROWSER2 CONNECTION +++
-                                    if (conBROW2Thread.IsAlive)
-                                    {
-                                        streamBROW2.Dispose();
-                                        streamBROW2 = stream;
-                                        stream = null;
-                                        Console.WriteLine("conBROW2Thread Number: " + conBROW2Thread.GetHashCode().ToString());
-                                        conBROW2canWrite = true;
-                                    }
-                                    else
-                                    {
-                                        conBROW2Thread.Start();
-                                        Console.WriteLine("conBROW2Thread Number: " + conBROW2Thread.GetHashCode().ToString());
-                                        conBROW2canWrite = true;
-                                    }
-                                    //BROWSER2 CONNECTION ---                                   
+                                    streamBROW2.Dispose();
+                                    streamBROW2 = stream;
+                                    stream = null;
+                                    Console.WriteLine("conBROW2Thread Number: " + conBROW2Thread.GetHashCode().ToString());
+                                    conBROW2canWrite = true;
+                                    MainWindow.flagUserId = "modifyed";
+                                    Console.WriteLine("flagUserId = modifyed");
                                 }
-                                else //level3
+                                else
                                 {
-                                    //BROWSER3 CONNECTION +++
-                                    if (conBROW3Thread.IsAlive)
-                                    {
-                                        streamBROW3.Dispose();
-                                        streamBROW3 = stream;
-                                        stream = null;
-                                        Console.WriteLine("conBROW3Thread Number: " + conBROW3Thread.GetHashCode().ToString());
-                                        conBROW3canWrite = true;
-                                    }
-                                    else
-                                    {
-                                        conBROW3Thread.Start();
-                                        Console.WriteLine("conBROW3Thread Number: " + conBROW3Thread.GetHashCode().ToString());
-                                        conBROW3canWrite = true;
-                                    }
-                                    //BROWSER2 CONNECTION ---
+                                    conBROW2Thread.Start();
+                                    Console.WriteLine("conBROW2Thread Number: " + conBROW2Thread.GetHashCode().ToString());
+                                    conBROW2canWrite = true;
+                                    MainWindow.flagUserId = "modifyed";
+                                    Console.WriteLine("flagUserId = modifyed");
                                 }
-                            }                      
+                                //BROWSER2 CONNECTION ---                                   
+                            }
+                            else //level3
+                            {
+                                //BROWSER3 CONNECTION +++
+                                if (conBROW3Thread.IsAlive)
+                                {
+                                    streamBROW3.Dispose();
+                                    streamBROW3 = stream;
+                                    stream = null;
+                                    Console.WriteLine("conBROW3Thread Number: " + conBROW3Thread.GetHashCode().ToString());
+                                    conBROW3canWrite = true;
+                                    MainWindow.flagUserId = "modifyed";
+                                    Console.WriteLine("flagUserId = modifyed");
+                                }
+                                else
+                                {
+                                    conBROW3Thread.Start();
+                                    Console.WriteLine("conBROW3Thread Number: " + conBROW3Thread.GetHashCode().ToString());
+                                    conBROW3canWrite = true;
+                                    MainWindow.flagUserId = "modifyed";
+                                    Console.WriteLine("flagUserId = modifyed");
+                                }
+                                //BROWSER2 CONNECTION ---
+                            }
+                        }
                     }
                     else //net.socket != ^GET                              
                     {
@@ -219,7 +231,7 @@ namespace FaceID
                     if ((msgLength = streamNJS.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // translate bytes of request to string            
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, msgLength);                        
+                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, msgLength);
                         Actions.actions(data);
                     }
                     else
@@ -255,7 +267,7 @@ namespace FaceID
             String data;
             String msg;
             streamBROW1 = stream;
-            stream = null;                       
+            stream = null;
 
             while (true)
             {
@@ -297,7 +309,7 @@ namespace FaceID
             String data;
             String msg;
             streamBROW2 = stream;
-            stream = null;                     
+            stream = null;
 
             while (true)
             {
@@ -339,7 +351,7 @@ namespace FaceID
             String data;
             String msg;
             streamBROW3 = stream;
-            stream = null;                       
+            stream = null;
 
             while (true)
             {
@@ -380,36 +392,36 @@ namespace FaceID
          * level == 3: send only for user level 3
          * level == 255: send for broadcasting (1 and 2 and 3)
          */
-        public static void sendMsg(int level, String cod, String msg, String userId)        
+        public static void sendMsg(int level, String cod, String msg, String userId)
         {
             //PARSE JSON
             code.code = cod;
             code.msg = msg;
             code.userId = userId;
-            var codeJSON = JsonConvert.SerializeObject(code);           
+            var codeJSON = JsonConvert.SerializeObject(code);
 
             Byte[] msgConverted = Converter.strToByte(codeJSON);
 
             //TRY SEND MSG NODEJS+++
             if (level == 0 && conNJScanWrite)
-            {                
+            {
                 try
                 {
                     Byte[] rawData = System.Text.ASCIIEncoding.UTF8.GetBytes(codeJSON);
                     streamNJS.Write(rawData, 0, rawData.Length);
-                    
+
                 }
                 catch
                 {
                     conNJScanWrite = false;
                     Console.WriteLine("Exception sendMsg NODEJS 000");
-                }                
+                }
             }
             //TRY SEND MSG NODEJS---
 
             //TRY SEND MSG BROWSER1+++
             if (level == 1 || (level == 255 && conBROW1canWrite))
-            {                
+            {
                 try
                 {
                     streamBROW1.Write(msgConverted, 0, msgConverted.Length);
@@ -417,15 +429,15 @@ namespace FaceID
                 catch
                 {
                     conBROW1canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 111");                    
-                }                
+                    Console.WriteLine("Exception sendMsg BROWSER 111");
+                }
             }
             //TRY SEND MSG BROWSER1---
 
             //TRY SEND MSG BROWSER2+++
             if (level == 2 || (level == 255 && conBROW2canWrite))
             {
-                
+
                 try
                 {
                     streamBROW2.Write(msgConverted, 0, msgConverted.Length);
@@ -434,13 +446,13 @@ namespace FaceID
                 {
                     conBROW2canWrite = false;
                     Console.WriteLine("Exception sendMsg BROWSER 222");
-                }                
+                }
             }
             //TRY SEND MSG BROWSER2---
 
             //TRY SEND MSG BROWSER3+++
             if (level == 3 || (level == 255 && conBROW3canWrite))
-            {                
+            {
                 try
                 {
                     streamBROW3.Write(msgConverted, 0, msgConverted.Length);
@@ -449,7 +461,7 @@ namespace FaceID
                 {
                     conBROW3canWrite = false;
                     Console.WriteLine("Exception sendMsg BROWSER 333");
-                }                
+                }
             }
             //TRY SEND MSG BROWSER3---
 
@@ -479,7 +491,7 @@ namespace FaceID
                 X++;
                 Y++;
                 coords = Y.ToString() + " " + X.ToString() + " " + W.ToString() + " " + H.ToString();
-                                                
+
                 Server.sendMsg(255, cod, coords, userId);
                 Thread.Sleep(100);
             }

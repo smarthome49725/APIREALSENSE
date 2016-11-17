@@ -54,6 +54,7 @@ namespace FaceID
                 Server.conBROW1canWrite = codigo.rect;
                 if(codigo.rect)
                 {
+                    Console.WriteLine("Configure Realsense");
                     MainWindow.ConfigureRealSense();
                     MainWindow.processingThread.Start();
                     
@@ -77,7 +78,7 @@ namespace FaceID
             Console.WriteLine("registerUser true");
             //MainWindow.SaveDatabaseToFile();
             Create create = new Create();
-            create.Adiciona(codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+            create.Adiciona(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
         }
 
         static void unregisterUser()
@@ -87,10 +88,11 @@ namespace FaceID
 
 
         public static void LoadUser(int userId)
-        {            
+        {
+            Console.WriteLine("LoadUser: " + userId);
             Read reader = new Read();
-            String userJSON = reader.Reader(userId, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
-            //Console.WriteLine(userJSON);
+            String userJSON = reader.Reader(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+            Console.WriteLine(userJSON);
             
             Server.sendMsg(255, "userData", userJSON, "");
         }
@@ -101,6 +103,8 @@ namespace FaceID
 
 class Codigo
 {
+    public int userID { get; set; }
+
     public int level { get; set; }
     public string cod { get; set; }
 

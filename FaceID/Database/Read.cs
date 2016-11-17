@@ -15,7 +15,7 @@ namespace FaceID
         //VS2012
         //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
-        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
+        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True;";
       
         object userData;
         String userJSON;
@@ -85,8 +85,10 @@ namespace FaceID
                 {
                     Console.WriteLine(ex.Message);
                 }
+                connection.Close();
+                connection.Dispose();
             }
-
+                        
             return userJSON;
         }
     }
