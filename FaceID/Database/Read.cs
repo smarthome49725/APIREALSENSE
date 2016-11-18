@@ -22,12 +22,10 @@ namespace FaceID
 
         object userData;
         String userJSON;
-        String userInView;
         List<string> lista = new List<string>();
 
         public String Reader(int userID = 0, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
-        {
-            Console.WriteLine("LEUUUUUUUUU!!!!" + userID.ToString());
+        {            
             string commandText;
 
             if (userID != 0)
@@ -75,28 +73,15 @@ namespace FaceID
                             tel = reader["tel"].ToString(),
                             nasc = reader["nasc"].ToString(),
                             email = reader["email"].ToString()
-                        };
-
-                        Console.WriteLine("DO BANCO " + reader["userID"].ToString());
+                        };                       
 
                         Console.WriteLine(userData.ToString());
-                        lista.Add(JsonConvert.SerializeObject(userData));
+                        lista.Add(JsonConvert.SerializeObject(userData));                        
+                           
+                       
 
-                        if (userID != 0)
-                        {
-                            Console.WriteLine("IF 200000000000000000000000000000!");
-                            Console.WriteLine(reader["nome"].ToString());
-                            MainWindow.userInView = reader["nome"].ToString();
-                        }
-                        else
-                        {
-                            MainWindow.userInView = MainWindow.userId;
-                        }
-
-                    }
-
-
-
+                    }                 
+                    
                     userJSON = JsonConvert.SerializeObject(lista);
 
                     // Call Close when done reading.

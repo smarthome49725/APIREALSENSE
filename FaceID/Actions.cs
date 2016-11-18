@@ -79,6 +79,8 @@ namespace FaceID
             //MainWindow.SaveDatabaseToFile();
             Create create = new Create();
             create.Adiciona(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+
+            Actions.LoadUser(codigo.userID);            
         }
 
         static void unregisterUser()

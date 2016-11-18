@@ -59,8 +59,7 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         public static String coords;
-        public static string flagUserId = null;
-        public static string userInView = null;
+        public static string flagUserId = null;             
 
 
 
@@ -93,11 +92,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            //////ConfigureRealSense();
+            /////////////////ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            //////processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            ////////////////////processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
 
            
         }
@@ -337,17 +336,14 @@ namespace FaceID
                                 // Set the user ID and process register/unregister logic
                                 if (recognitionData.IsRegistered())
                                 {
-                                    userId = Convert.ToString(recognitionData.QueryUserID());                                    
+                                    userId = Convert.ToString(recognitionData.QueryUserID());
 
-                                    if (flagUserId != userInView)
+                                    if (flagUserId != userId)
                                     {                                       
                                         Actions.LoadUser(Convert.ToInt16(userId));
-                                        flagUserId = userInView;
-                                    }
-                                    userId = userInView;
-                                    Console.WriteLine(userId);
-
-
+                                        flagUserId = userId;
+                                    }                                
+                                    
                                     if (doUnregister)
                                     {
                                         recognitionData.UnregisterUser();
@@ -358,7 +354,7 @@ namespace FaceID
                                 {
                                     if (doRegister)
                                     {
-                                        recognitionData.RegisterUser();
+                                        recognitionData.RegisterUser();                                        
 
                                         // Capture a jpg image of registered user
                                         colorBitmap.Save("image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -367,16 +363,14 @@ namespace FaceID
                                     }
                                     else
                                     {
-                                        userId = "Unrecognized";
-                                        userInView = "Unrecognized";
+                                        userId = "Unrecognized";                                        
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            userId = "No users in view";
-                            userInView = "No users in view";
+                            userId = "No users in view";                            
                         }
                     }
 
