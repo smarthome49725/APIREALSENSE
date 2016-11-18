@@ -14,8 +14,9 @@ namespace FaceID
         //VS2012
         //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
-        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
-               
+        //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
+        static string strCn = ConnectionString.getConnectionString();
+
         public void Adiciona(int userID, string nome, string fone, string nasc, string email)
         {            
             string commandText = "INSERT INTO tbusers (userID, Nome, Tel, Nasc, Email) VALUES (@userID, @nome, @fone, @nasc, @email)";                   

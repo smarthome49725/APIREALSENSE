@@ -14,11 +14,12 @@ namespace FaceID
         //VS2012
         //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
-        static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
+        //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
+        static string strCn = ConnectionString.getConnectionString();
 
         public void Deletar(int userID)
         {
-            string commandText = "DELETE * FROM tbusers WHERE userID=@userID";
+            string commandText = "DELETE FROM tbusers WHERE userID=@userID";
 
             using (SqlConnection connection = new SqlConnection(strCn))
             {

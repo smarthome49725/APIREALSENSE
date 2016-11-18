@@ -42,6 +42,10 @@ namespace FaceID
                     LoadUser(0);
                     Console.WriteLine("READ USER-FINAL");                    
                     break;
+                case "updateuser":
+                    updateUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+                    Console.WriteLine("updateuser!");
+                    break; 
 
 
             }
@@ -84,6 +88,8 @@ namespace FaceID
         static void unregisterUser()
         {
             Console.WriteLine("unregisterUser");
+            Delete delete = new Delete();
+            delete.Deletar(codigo.userID);
         }
 
 
@@ -95,6 +101,12 @@ namespace FaceID
             Console.WriteLine(userJSON);
             
             Server.sendMsg(255, "userData", userJSON, "");
+        }
+
+        public static void updateUser(int userId, string nome, string tel, string nasc, string email)
+        {
+            Update update = new Update();
+            update.Alterar(userId, nome, tel, nasc, email);
         }
     }
 
