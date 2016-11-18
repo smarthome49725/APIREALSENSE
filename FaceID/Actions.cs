@@ -39,15 +39,13 @@ namespace FaceID
                     Console.WriteLine("doUnregister");                
                     break;
                 case "getuser":                    
-                    LoadUser(0);
+                    LoadUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
                     Console.WriteLine("READ USER-FINAL");                    
                     break;
                 case "updateuser":
                     updateUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
                     Console.WriteLine("updateuser!");
-                    break; 
-
-
+                    break;
             }
         }
 
@@ -60,9 +58,7 @@ namespace FaceID
                 {
                     Console.WriteLine("Configure Realsense");
                     MainWindow.ConfigureRealSense();
-                    MainWindow.processingThread.Start();
-                    
-                    
+                    MainWindow.processingThread.Start();               
                 }
             }
             if (codigo.level == 2)
@@ -92,14 +88,13 @@ namespace FaceID
             delete.Deletar(codigo.userID);
         }
 
-
-        public static void LoadUser(int userId)
+        public static void LoadUser(int userId=0, string nome="", string tel="", string nasc="", string email="")
         {
             Console.WriteLine("LoadUser: " + userId);
             Read reader = new Read();
-            String userJSON = reader.Reader(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
-            Console.WriteLine(userJSON);
-            
+            String userJSON = reader.Reader(userId, nome, tel, nasc, email);
+            //Console.WriteLine(codigo.userID);            
+
             Server.sendMsg(255, "userData", userJSON, "");
         }
 
@@ -109,8 +104,6 @@ namespace FaceID
             update.Alterar(userId, nome, tel, nasc, email);
         }
     }
-
-
 }
 
 class Codigo
@@ -126,5 +119,4 @@ class Codigo
     public string tel { get; set; }
     public string nasc { get; set; }
     public string email { get; set; }
-
 }

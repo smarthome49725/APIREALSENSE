@@ -17,15 +17,17 @@ namespace FaceID
         //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
         //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True;";
-        static string strCn = ConnectionString.getConnectionString();       
-        
+        static string strCn = ConnectionString.getConnectionString();
+
 
         object userData;
         String userJSON;
+        String userInView;
         List<string> lista = new List<string>();
 
         public String Reader(int userID = 0, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
         {
+            Console.WriteLine("LEUUUUUUUUU!!!!" + userID.ToString());
             string commandText;
 
             if (userID != 0)
@@ -67,18 +69,35 @@ namespace FaceID
                     while (reader.Read())
                     {
                         userData = new
-                        {                            
-                                userID = reader["userID"].ToString(),
-                                nome = reader["nome"].ToString(),
-                                tel = reader["tel"].ToString(),
-                                nasc = reader["nasc"].ToString(),
-                                email = reader["email"].ToString()                           
+                        {
+                            userID = reader["userID"].ToString(),
+                            nome = reader["nome"].ToString(),
+                            tel = reader["tel"].ToString(),
+                            nasc = reader["nasc"].ToString(),
+                            email = reader["email"].ToString()
                         };
-                        
-                        lista.Add(JsonConvert.SerializeObject(userData));
-                    }                   
 
-                    userJSON = JsonConvert.SerializeObject(lista);                    
+                        Console.WriteLine("DO BANCO " + reader["userID"].ToString());
+
+                        Console.WriteLine(userData.ToString());
+                        lista.Add(JsonConvert.SerializeObject(userData));
+
+                        if (userID != 0)
+                        {
+                            Console.WriteLine("IF 200000000000000000000000000000!");
+                            Console.WriteLine(reader["nome"].ToString());
+                            MainWindow.userInView = reader["nome"].ToString();
+                        }
+                        else
+                        {
+                            MainWindow.userInView = MainWindow.userId;
+                        }
+
+                    }
+
+
+
+                    userJSON = JsonConvert.SerializeObject(lista);
 
                     // Call Close when done reading.
                     reader.Close();
@@ -91,7 +110,6 @@ namespace FaceID
                 connection.Close();
                 connection.Dispose();
             }
-                        
             return userJSON;
         }
     }

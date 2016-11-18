@@ -60,6 +60,7 @@ namespace FaceID
         private int faceRectangleY;
         public static String coords;
         public static string flagUserId = null;
+        public static string userInView = null;
 
 
 
@@ -336,14 +337,16 @@ namespace FaceID
                                 // Set the user ID and process register/unregister logic
                                 if (recognitionData.IsRegistered())
                                 {
-                                    userId = Convert.ToString(recognitionData.QueryUserID());
-                                    
-                                    if (flagUserId != userId)
-                                    {
-                                        Actions.LoadUser(Convert.ToInt16(userId));//carrega usuario a partir do us
-                                        flagUserId = userId;
+                                    userId = Convert.ToString(recognitionData.QueryUserID());                                    
+
+                                    if (flagUserId != userInView)
+                                    {                                       
+                                        Actions.LoadUser(Convert.ToInt16(userId));
+                                        flagUserId = userInView;
                                     }
-                                    
+                                    userId = userInView;
+                                    Console.WriteLine(userId);
+
 
                                     if (doUnregister)
                                     {
@@ -364,14 +367,16 @@ namespace FaceID
                                     }
                                     else
                                     {
-                                        userId = "Unrecognized";                                        
+                                        userId = "Unrecognized";
+                                        userInView = "Unrecognized";
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            userId = "No users in view";                            
+                            userId = "No users in view";
+                            userInView = "No users in view";
                         }
                     }
 
