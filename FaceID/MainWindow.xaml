@@ -7,23 +7,8 @@
         Closing="Window_Closing" Height="640" Background="White" Width="960">
 
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Label Content="Cadastro" FontSize="32" Foreground="Black" Margin="5"/>
         <StackPanel Orientation="Horizontal">
-            <Border x:Name="bdrPictureBorder" BorderBrush="#FFD1D1D1" BorderThickness="2" Margin="10">
-                <Canvas Width="640" Height="480" ClipToBounds="True">
-                    <Image x:Name="imgColorStream"/>
-                    <Rectangle x:Name="rectFaceMarker" Fill="#00000000" Height="50" Stroke="LightGreen" Width="50" StrokeThickness="2"/>
-                    <Label x:Name="lblFloatingId" Foreground="LightGreen" Background="#00000000" FontWeight="Bold"/>
-                </Canvas>
-            </Border>
             <StackPanel RenderTransformOrigin="0.5,0.5" Width="250">
-                <Label x:Name="lblUserId" Content="-" FontSize="18" Foreground="Black" HorizontalAlignment="Center"/>
-                <Label x:Name="lblNumFacesDetected" Content="-" FontSize="18" Foreground="Black" HorizontalAlignment="Center"/>
-                <Label x:Name="lblDatabaseState" Content="-" FontSize="18" Foreground="Black" HorizontalAlignment="Center"/>
-                <CheckBox x:Name="chkShowFaceMarker" FontSize="16" Foreground="Black" Content="Marcador de Rosto" Margin="0,60,0,0" HorizontalAlignment="Center" Background="White" />
-                <Button x:Name="btnRegister" Content="Registrar Usuário" Click="btnRegister_Click" Width="150" Margin="5,10,10,0" Height="30" FontSize="16" HorizontalAlignment="Center"/>
-                <Button x:Name="btnUnregister" Content="Remover Usuário" Click="btnUnregister_Click" Width="150" Margin="5,10,10,0" Height="30" FontSize="16" HorizontalAlignment="Center"/>
-                <Button x:Name="btnSaveDatabase" Content="Salvar Database" Click="btnSaveDatabase_Click" Width="150" Margin="5,10,10,0" Height="30" FontSize="16" HorizontalAlignment="Center"/>
                 <Button x:Name="btnDeleteDatabase" Content="Deletar Database" Width="150" Margin="5,10,10,0" Height="30" FontSize="16" Click="btnDeleteDatabase_Click" HorizontalAlignment="Center"/>
                 <TextBox x:Name="IP" Height="22" TextWrapping="Wrap" Text="10.101.33.125" TextChanged="IP_TextChanged"/>
                 <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="0" Margin="165,0,0,0" Width="1"/>
