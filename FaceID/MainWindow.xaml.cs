@@ -51,7 +51,7 @@ namespace FaceID
         public static string dbState;
         private const int DatabaseUsers = 10; //Numero máximo de usuários suportado pelo banco de dados        
         private const string DatabaseName = "UserDB"; //Nome do banco de dados
-        private const string DatabaseFilename = "database.bin"; //Nome do arquivo do banco de dados
+        private const string DatabaseFilename = "SH2DB.bin"; //Nome do arquivo do banco de dados
         public static bool doRegister;
         public static bool doUnregister;
         private int faceRectangleHeight;
@@ -92,11 +92,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            /////////////////ConfigureRealSense();
+            //////////////ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread)); //Cria uma thread para executar os processos de reconhecimeto facial
-            ////////////////////processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
+            //////////////processingThread.Start(); //Inicia a thread que realiza o processo de reconhecimento facial
 
            
         }
@@ -337,16 +337,17 @@ namespace FaceID
                                 if (recognitionData.IsRegistered())
                                 {
                                     userId = Convert.ToString(recognitionData.QueryUserID());
-
+                                    
                                     if (flagUserId != userId)
                                     {                                       
-                                        Actions.LoadUser(Convert.ToInt16(userId));
+                                        Actions.AsyncLoadUser(Convert.ToInt16(userId));
                                         flagUserId = userId;
                                     }                                
                                     
                                     if (doUnregister)
                                     {
                                         recognitionData.UnregisterUser();
+                                        SaveDatabaseToFile(); 
                                         doUnregister = false;
                                     }
                                 }
@@ -528,6 +529,11 @@ namespace FaceID
 
 
         private void btnSaveDatabase_Click(object sender, RoutedEventArgs e)
+        {
+            SaveDatabaseToFile();
+        }
+
+        public static void saveDatabaseToFile()
         {
             SaveDatabaseToFile();
         }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using FaceID;
+using System.Windows;
 
 namespace FaceID
 {
@@ -25,18 +26,14 @@ namespace FaceID
                     rect();
                     break;
                 case "registerUser":
-                    registerUser();
+                    registerUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
                     break;
                 case "unregisterUser":
-                    unregisterUser();
+                    unregisterUser(codigo.userID);
                     break;
                 case "geniduser":
                     MainWindow.doRegister = true;
                     Console.WriteLine("doRegister");
-                    break;
-                case "rmiduser":
-                    MainWindow.doUnregister = true;
-                    Console.WriteLine("doUnregister");                
                     break;
                 case "getuser":                    
                     LoadUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
@@ -73,37 +70,51 @@ namespace FaceID
             Console.WriteLine("Rect level" + codigo.level + ": " + codigo.rect);
         }
 
-        static void registerUser()
+        static void registerUser(int userId, string nome, string tel, string nasc, string email)
         {
-            Console.WriteLine("registerUser true");
-            //MainWindow.SaveDatabaseToFile();
+            Console.WriteLine("registerUser true");            
             Create create = new Create();
-            create.Adiciona(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+            create.Adiciona(userId, nome, tel, nasc, email);
+            MainWindow.SaveDatabaseToFile(); 
 
-            Actions.LoadUser(codigo.userID);            
+            Actions.LoadUser(userId);            
         }
 
-        static void unregisterUser()
+        static void unregisterUser(int userId)
         {
             Console.WriteLine("unregisterUser");
             Delete delete = new Delete();
-            delete.Deletar(codigo.userID);
+            delete.Deletar(userId);
+
+            MainWindow.doUnregister = true;
+            MainWindow.SaveDatabaseToFile();
+
+            Actions.LoadUser(userId);
         }
 
-        public static void LoadUser(int userId=0, string nome="", string tel="", string nasc="", string email="")
+        private static String LoadUser(int userId=0, string nome="", string tel="", string nasc="", string email="")
         {
             Console.WriteLine("LoadUser: " + userId);
             Read reader = new Read();
             String userJSON = reader.Reader(userId, nome, tel, nasc, email);
-            //Console.WriteLine(codigo.userID);            
-
+            
             Server.sendMsg(255, "userData", userJSON, "");
+            return userJSON;
+        }
+
+        public static Task<string> AsyncLoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
+        {
+            return Task.Run(() =>
+            {                
+                return LoadUser(userId);
+            });
         }
 
         public static void updateUser(int userId, string nome, string tel, string nasc, string email)
         {
             Update update = new Update();
             update.Alterar(userId, nome, tel, nasc, email);
+            Actions.LoadUser(userId);
         }
     }
 }
