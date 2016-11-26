@@ -4,21 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="FaceID.MainWindow"
         Title="Intel® RealSense™ Code Sample"
         WindowStartupLocation="CenterScreen"
-        Closing="Window_Closing" Height="640" Background="White" Width="960">
+        Closing="Window_Closing" Height="489.5" Width="634.5">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel Orientation="Horizontal">
-            <StackPanel RenderTransformOrigin="0.5,0.5" Width="250">
-                <Button x:Name="btnDeleteDatabase" Content="Deletar Database" Width="150" Margin="5,10,10,0" Height="30" FontSize="16" Click="btnDeleteDatabase_Click" HorizontalAlignment="Center"/>
-                <TextBox x:Name="IP" Height="22" TextWrapping="Wrap" Text="10.101.33.125" TextChanged="IP_TextChanged"/>
-                <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="0" Margin="165,0,0,0" Width="1"/>
-                <Button x:Name="configIP" Content="Configura IP" Click="configIP_Click"/>
-                <TextBox x:Name="cod" Height="23" TextWrapping="Wrap" Text="Codigo" TextChanged="textBox_TextChanged"/>
-                <TextBox x:Name="msg" Height="22" TextWrapping="Wrap" Text="msg"/>
-                <Button x:Name="sendCod" Content="Enviar Código -> NODEJS" Click="sendCod_Click"/>
-                <Button x:Name="sendCoordCanvasHTML" Content="Send Coord Canvas HTML" Click="sendCoordCanvasHTML_Click"/>
-
-            </StackPanel>
+    <Grid HorizontalAlignment="Left" Width="601" Height="418" VerticalAlignment="Top" Margin="10,10,0,0" Background="#FFF5ECEC">
+        <StackPanel Background="Green" HorizontalAlignment="Right" Height="168" VerticalAlignment="Top" Width="158" Margin="0,144,-189,0">
+            <Label x:Name="TESTES_DEPURAÇÃO" Content="TESTES" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name="cod" Height="23" TextWrapping="Wrap" Text="Codigo" TextChanged="textBox_TextChanged"/>
+            <TextBox x:Name="msg" Height="22" TextWrapping="Wrap" Text="msg"/>
+            <Button x:Name="sendCod" Content="Enviar Código -&gt; NODEJS" Click="sendCod_Click"/>
+            <Button x:Name="sendCoordCanvasHTML" Content="Send Coord Canvas HTML" Click="sendCoordCanvasHTML_Click" Height="20"/>
+            <Button x:Name="TESTE" Content="TESTES" HorizontalAlignment="Left" VerticalAlignment="Top" Width="74" Click="button_Click" RenderTransformOrigin="-0.473,3.5"/>
         </StackPanel>
-    </StackPanel>
+        <StackPanel  VerticalAlignment="Bottom"/>
+        <Label x:Name="label2" Content="IP" HorizontalAlignment="Left" Margin="162,144,0,0" VerticalAlignment="Top" Height="23" RenderTransformOrigin="0.9,3.188"/>
+        <Label x:Name="label" Content="Configuraçoes" HorizontalContentAlignment="Center" Margin="200,92,203,300"/>
+        <Label x:Name="label3" Content="PORT" HorizontalAlignment="Left" Margin="161,118,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="PORT" TextWrapping="Wrap" Text="PORT" Margin="200,120,203,275"/>
+        <TextBox x:Name="IP" TextWrapping="Wrap" Text="IP" Margin="200,148,203,248"/>
+        <Button x:Name="configIP" Content="SAVE" Click="configIP_Click" Margin="200,178,203,220" Background="#FF00CC99"/>
+        <Button x:Name="btnDeleteDatabase" Content="Del Database" Click="btnDeleteDatabase_Click" Margin="200,233,203,160" Background="Red"/>
+        <StackPanel Background="#FFEAE0E0" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="601">
+            <Image x:Name="image1" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="521" Source="C:\Users\ADM\Documents\SH2\shart_home_automated.png" Margin="80,0,0,0"/>
+        </StackPanel>
+        <Label x:Name="label1" FontSize="16" Content="LOG" HorizontalContentAlignment="Center" RenderTransformOrigin="0.504,1.449" Margin="10,295,10,89"/>
+        <ListBox x:Name="system_status" Height="76" VerticalAlignment="Bottom" Margin="10,0,10,13"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="93" Source="C:\Users\ADM\Documents\SH2\logo2.png" Margin="0,-1,0,0"/>
+    </Grid>
+
 </Window>

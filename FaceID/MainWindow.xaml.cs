@@ -17,9 +17,10 @@ using System;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Threading;
-using System.Drawing; 
+using System.Drawing;
 using System.Windows.Controls;
-using System.IO; 
+using System.IO;
+using Newtonsoft.Json;
 
 namespace FaceID
 {
@@ -29,21 +30,21 @@ namespace FaceID
     public partial class MainWindow : Window
     {
         Server servidor = new Server();
-        public int flag2 = 1;     
+        public int flag2 = 1;
 
         public static Thread processingThread;
-        
+
         public static PXCMSenseManager senseManager;
-        
+
         public static PXCMFaceConfiguration.RecognitionConfiguration recognitionConfig;
         public static PXCMFaceData faceData;
         private PXCMFaceData.RecognitionData recognitionData;
         private Int32 numFacesDetected;
         public static string userId;
         public static string dbState;
-        private const int DatabaseUsers = 10;      
-        private const string DatabaseName = "UserDB"; 
-        private const string DatabaseFilename = "SH2DB.bin"; 
+        private const int DatabaseUsers = 10;
+        private const string DatabaseName = "UserDB";
+        private const string DatabaseFilename = "SH2DB.bin";
         public static bool doRegister;
         public static bool doUnregister;
         private int faceRectangleHeight;
@@ -51,16 +52,19 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         public static String coords;
-        public static string flagUserId = null;   
+        public static string flagUserId = null;
 
         public MainWindow()
         {
+
             //WebSocket
-            Server servidor = new Server();            
-            Thread servidorThread = new Thread(servidor.StartServer);            
-            servidorThread.Start();   
+            Server servidor = new Server();
+            Thread servidorThread = new Thread(servidor.StartServer);
+            servidorThread.Start();
 
             InitializeComponent();
+
+            updateUI();
 
             numFacesDetected = 0;
             userId = string.Empty;
@@ -72,61 +76,61 @@ namespace FaceID
             ////ConfigureRealSense();
 
             // Start the worker thread
-            processingThread = new Thread(new ThreadStart(ProcessingThread)); 
+            processingThread = new Thread(new ThreadStart(ProcessingThread));
             ////processingThread.Start(); 
-           
-        }        
 
-        public static void ConfigureRealSense() 
+        }
+
+        public static void ConfigureRealSense()
         {
             //Start the SenseManager and session               
-            senseManager = PXCMSenseManager.CreateInstance(); 
+            senseManager = PXCMSenseManager.CreateInstance();
 
             // Enable the color stream        
             senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 30);
 
             // Enable the face module
             senseManager.EnableFace();
-            PXCMFaceModule faceModule = senseManager.QueryFace(); 
-                                    
+            PXCMFaceModule faceModule = senseManager.QueryFace();
+
             PXCMFaceConfiguration faceConfig = faceModule.CreateActiveConfiguration();
 
             // Configure for 3D face tracking (if camera cannot support depth it will revert to 2D tracking)
             faceConfig.SetTrackingMode(PXCMFaceConfiguration.TrackingModeType.FACE_MODE_COLOR_PLUS_DEPTH);
 
             // Enable facial recognition             
-            recognitionConfig = faceConfig.QueryRecognition(); 
-            recognitionConfig.Enable(); 
+            recognitionConfig = faceConfig.QueryRecognition();
+            recognitionConfig.Enable();
 
             //Create a recognition database             
             PXCMFaceConfiguration.RecognitionConfiguration.RecognitionStorageDesc storageDesc = new PXCMFaceConfiguration.RecognitionConfiguration.RecognitionStorageDesc();
-            storageDesc.maxUsers = DatabaseUsers; 
-            recognitionConfig.CreateStorage(DatabaseName, out storageDesc); 
-            recognitionConfig.UseStorage(DatabaseName); 
+            storageDesc.maxUsers = DatabaseUsers;
+            recognitionConfig.CreateStorage(DatabaseName, out storageDesc);
+            recognitionConfig.UseStorage(DatabaseName);
             LoadDatabaseFromFile();
-            
+
             recognitionConfig.SetRegistrationMode(PXCMFaceConfiguration.RecognitionConfiguration.RecognitionRegistrationMode.REGISTRATION_MODE_CONTINUOUS);
-            
-            faceConfig.ApplyChanges(); 
+
+            faceConfig.ApplyChanges();
 
             senseManager.Init();
 
             faceData = faceModule.CreateOutput();
 
             senseManager.QueryCaptureManager().QueryDevice().SetMirrorMode(PXCMCapture.Device.MirrorMode.MIRROR_MODE_HORIZONTAL);
-                        
+
             faceConfig.Dispose();
             faceModule.Dispose();
         }
-             
+
         public static void LoadDatabaseFromFile()
         {
-            if (File.Exists(DatabaseFilename)) 
-            {                
+            if (File.Exists(DatabaseFilename))
+            {
                 Byte[] buffer = File.ReadAllBytes(DatabaseFilename);
-                                
-                recognitionConfig.SetDatabaseBuffer(buffer); 
-                dbState = "Loaded"; 
+
+                recognitionConfig.SetDatabaseBuffer(buffer);
+                dbState = "Loaded";
             }
             else
             {
@@ -149,7 +153,7 @@ namespace FaceID
             File.WriteAllBytes(DatabaseFilename, buffer);
             dbState = "Saved";
         }
-            
+
         private void DeleteDatabaseFile()
         {
             if (File.Exists(DatabaseFilename))
@@ -163,15 +167,15 @@ namespace FaceID
             }
         }
 
-        
+
         private void ProcessingThread()
         {
             try
             {
                 while (senseManager.AcquireFrame(true) >= pxcmStatus.PXCM_STATUS_NO_ERROR)
-                {                    
+                {
                     PXCMCapture.Sample sample = senseManager.QuerySample();
-                     
+
                     PXCMImage.ImageData colorData;
 
                     sample.color.AcquireAccess(PXCMImage.Access.ACCESS_READ, PXCMImage.PixelFormat.PIXEL_FORMAT_RGB24, out colorData);
@@ -198,7 +202,7 @@ namespace FaceID
                                 faceRectangleHeight = faceRectangle.h;
                                 faceRectangleWidth = faceRectangle.w;
                                 faceRectangleX = faceRectangle.x;
-                                faceRectangleY = faceRectangle.y; 
+                                faceRectangleY = faceRectangle.y;
                             }
 
                             // Process face recognition data
@@ -211,17 +215,17 @@ namespace FaceID
                                 if (recognitionData.IsRegistered())
                                 {
                                     userId = Convert.ToString(recognitionData.QueryUserID());
-                                    
+
                                     if (flagUserId != userId)
-                                    {                                       
+                                    {
                                         Actions.AsyncLoadUser(Convert.ToInt16(userId));
                                         flagUserId = userId;
-                                    }                                
-                                    
+                                    }
+
                                     if (doUnregister)
                                     {
                                         recognitionData.UnregisterUser();
-                                        SaveDatabaseToFile(); 
+                                        SaveDatabaseToFile();
                                         doUnregister = false;
                                     }
                                 }
@@ -229,7 +233,7 @@ namespace FaceID
                                 {
                                     if (doRegister)
                                     {
-                                        recognitionData.RegisterUser();                                        
+                                        recognitionData.RegisterUser();
 
                                         // Capture a jpg image of registered user
                                         colorBitmap.Save("image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -238,16 +242,16 @@ namespace FaceID
                                     }
                                     else
                                     {
-                                        userId = "Unrecognized";                                        
+                                        userId = "Unrecognized";
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            userId = "No users in view";                            
+                            userId = "No users in view";
                         }
-                    }                   
+                    }
 
                     // Release resources
                     colorBitmap.Dispose();
@@ -269,10 +273,11 @@ namespace FaceID
         }
 
 
-                        
+
         private void btnDeleteDatabase_Click(object sender, RoutedEventArgs e)
         {
             DeleteDatabaseFile();
+            system_status.Items.Add(DateTime.UtcNow + "     " + "Database Deleted!");
         }
 
         //Converts image to Byte array
@@ -296,17 +301,6 @@ namespace FaceID
         {
             ReleaseResources();
         }
-        
-        private void IP_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            
-        }
-
-        private void configIP_Click(object sender, RoutedEventArgs e)
-        {
-            Server.ipAddress = IP.Text;             
-            MessageBox.Show("ipAddress Configurado com: " + Server.ipAddress);
-        }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -314,7 +308,7 @@ namespace FaceID
         }
 
         private void sendCod_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             Server.sendMsg(255, cod.Text, msg.Text, "userID");
         }
 
@@ -323,5 +317,34 @@ namespace FaceID
             Server.startTesteCanvasHTML();
             Console.WriteLine("startTesteCanvasHTML!");
         }
-    } 
+
+        private void configIP_Click(object sender, RoutedEventArgs e)
+        {
+            Database.config.configureIPandPORT(IP.Text, Convert.ToInt32(PORT.Text));
+            system_status.Items.Add(DateTime.UtcNow + "     " + "IP configurado para:" + IP.Text);
+            system_status.Items.Add(DateTime.UtcNow + "     " + "PORTA configurada para:" + PORT.Text);
+        }
+
+        public void updateUI()
+        {
+            IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Database.config.getIPandPort().ToString());
+            IP.Text = IPandPort.IP;
+            PORT.Text = IPandPort.PORT.ToString(); 
+
+        }
+
+        public void UpdateUITH(String msg)
+        {
+            this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(delegate ()
+               {
+                   system_status.Items.Add(DateTime.UtcNow + "     " + msg);
+               }));
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
+
 }
