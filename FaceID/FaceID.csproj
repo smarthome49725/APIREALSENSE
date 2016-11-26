@@ -111,6 +111,7 @@
     <Compile Include="Database\ConnectionString.cs" />
     <Compile Include="Database\Create.cs" />
     <Compile Include="Database\Delete.cs" />
+    <Compile Include="Database\GetLogin.cs" />
     <Compile Include="Database\Read.cs" />
     <Compile Include="Database\Update.cs" />
     <Compile Include="Server.cs" />

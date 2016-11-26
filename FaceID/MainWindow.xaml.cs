@@ -64,7 +64,7 @@ namespace FaceID
 
             InitializeComponent();
 
-            //TRY ICO
+            //TRAY ICO
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
             ni.Icon = new Icon(@"C:/Users/ADM/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
             ni.Visible = true;
