@@ -17,15 +17,15 @@ namespace FaceID
         //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
         static string strCn = ConnectionString.getConnectionString();
 
-        public void Adiciona(int userID, string nome, string fone, string nasc, string email)
+        public void Adiciona(int userID, string nome, string fone, string nasc, string email, string password, int level)
         {            
-            string commandText = "INSERT INTO tbusers (userID, Nome, Tel, Nasc, Email) VALUES (@userID, @nome, @fone, @nasc, @email)";                   
+            string commandText = "INSERT INTO tbusers (userID, Nome, Tel, Nasc, Email, password, level) VALUES (@userID, @nome, @fone, @nasc, @email, @password, @level)";                   
 
             using (SqlConnection connection = new SqlConnection(strCn))
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
 
-                command.Parameters.Add("@userID", SqlDbType.VarChar);
+                command.Parameters.Add("@userID", SqlDbType.Int);
                 command.Parameters["@userID"].Value = userID;
 
                 command.Parameters.Add("@nome", SqlDbType.VarChar);
@@ -38,7 +38,13 @@ namespace FaceID
                 command.Parameters["@nasc"].Value = nasc;
 
                 command.Parameters.Add("@email", SqlDbType.VarChar);
-                command.Parameters["@email"].Value = email;               
+                command.Parameters["@email"].Value = email;
+
+                command.Parameters.Add("@password", SqlDbType.VarChar);
+                command.Parameters["@password"].Value = password;
+
+                command.Parameters.Add("@level", SqlDbType.Int);
+                command.Parameters["@level"].Value = level;
 
                 try
                 {

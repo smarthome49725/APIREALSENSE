@@ -33,24 +33,24 @@ namespace FaceID
                     getLogin(codigo.login, codigo.password);
                     break;
                 case "rect":
-                    rect();
+                    rect(codigo.level);
                     break;
                 case "registerUser":
-                    registerUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+                    registerUser(codigo.userID, codigo.level, codigo.nome, codigo.tel, codigo.nasc, codigo.email, codigo.password, codigo.registerLevel);
                     break;
                 case "unregisterUser":
-                    unregisterUser(codigo.userID);
+                    unregisterUser(codigo.userID, codigo.level);
                     break;
                 case "geniduser":
                     MainWindow.doRegister = true;
                     Console.WriteLine("doRegister");
                     break;
                 case "getuser":
-                    LoadUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+                    LoadUser(codigo.userID, codigo.level, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
                 case "updateuser":
-                    updateUser(codigo.userID, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+                    updateUser(codigo.userID, codigo.level, codigo.nome, codigo.tel, codigo.nasc, codigo.email, codigo.password, codigo.registerLevel);
                     Console.WriteLine("updateuser!");
                     break;
             }
@@ -61,7 +61,7 @@ namespace FaceID
             int level = Database.GetLogin.getLogin(login, password);            
             if (level != -1)
             {
-                Server.sendMsg(level, "200", level.ToString(), "");
+                Server.sendMsg(255, "200", level.ToString(), "");
             }else
             {
                 Server.sendMsg(255, "404", level.ToString(), "");
@@ -70,9 +70,9 @@ namespace FaceID
             
         }
 
-        static void rect()
+        static void rect(int level)
         {
-            if (codigo.level == 1)
+            if (level == 1)
             {
                 Server.conBROW1canWrite = codigo.rect;
                 if (codigo.rect)
@@ -82,11 +82,11 @@ namespace FaceID
                     MainWindow.processingThread.Start();
                 }
             }
-            if (codigo.level == 2)
+            if (level == 2)
             {
                 Server.conBROW2canWrite = codigo.rect;
             }
-            if (codigo.level == 3)
+            if (level == 3)
             {
                 Server.conBROW3canWrite = codigo.rect;
             }
@@ -94,17 +94,17 @@ namespace FaceID
             Console.WriteLine("Rect level" + codigo.level + ": " + codigo.rect);
         }
 
-        static void registerUser(int userId, string nome, string tel, string nasc, string email)
+        static void registerUser(int userId, int level, string nome, string tel, string nasc, string email, string password, int registerLevel)
         {
             Console.WriteLine("registerUser true");
             Create create = new Create();
-            create.Adiciona(userId, nome, tel, nasc, email);
+            create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel);
             MainWindow.SaveDatabaseToFile();
 
-            Actions.LoadUser(userId);
+            Actions.LoadUser(userId, level);
         }
 
-        static void unregisterUser(int userId)
+        static void unregisterUser(int userId, int level)
         {
             Console.WriteLine("unregisterUser");
             Delete delete = new Delete();
@@ -113,19 +113,19 @@ namespace FaceID
             MainWindow.doUnregister = true;
             MainWindow.SaveDatabaseToFile();
 
-            Actions.LoadUser(userId);
+            Actions.LoadUser(userId, level);
         }
 
-        private static String LoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
+        private static String LoadUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "")
         {
             Console.WriteLine("LoadUser: " + userId);
             Read reader = new Read();
             String userJSON = reader.Reader(userId, nome, tel, nasc, email);
 
-            Server.sendMsg(255, "userData", userJSON, "");
+            Server.sendMsg(level, "userData", userJSON, "");
             return userJSON;
         }
-
+        
         public static Task<string> AsyncLoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
         {
             return Task.Run(() =>
@@ -134,11 +134,11 @@ namespace FaceID
             });
         }
 
-        public static void updateUser(int userId, string nome, string tel, string nasc, string email)
+        public static void updateUser(int userId, int level, string nome, string tel, string nasc, string email, string password, int registerLevel)
         {
             Update update = new Update();
-            update.Alterar(userId, nome, tel, nasc, email);
-            Actions.LoadUser(userId);
+            update.Alterar(userId, nome, tel, nasc, email, password, registerLevel);
+            Actions.LoadUser(userId, level);
         }
     }
 }
@@ -152,6 +152,7 @@ class Codigo
 
     public bool rect { get; set; }
 
+    public int registerLevel { get; set; }
     public string login { get; set; }
     public string password { get; set; }
     public string nome { get; set; }

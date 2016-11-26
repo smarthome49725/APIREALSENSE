@@ -72,7 +72,8 @@ namespace FaceID
                             nome = reader["nome"].ToString(),
                             tel = reader["tel"].ToString(),
                             nasc = reader["nasc"].ToString(),
-                            email = reader["email"].ToString()
+                            email = reader["email"].ToString(),
+                            level = reader["level"].ToString()
                         };                       
 
                         Console.WriteLine(userData.ToString());

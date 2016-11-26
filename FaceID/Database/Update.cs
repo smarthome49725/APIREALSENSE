@@ -17,9 +17,9 @@ namespace FaceID
         //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
         static string strCn = ConnectionString.getConnectionString();
 
-        public void Alterar(int userID, string nome, string fone, string nasc, string email)
+        public void Alterar(int userID, string nome, string fone, string nasc, string email, string password, int level)
         {
-            string commandText = "UPDATE tbusers SET nome=@nome, tel=@fone, nasc=@nasc, email=@email WHERE userID=@userID";
+            string commandText = "UPDATE tbusers SET nome=@nome, tel=@fone, nasc=@nasc, email=@email, password=@password, level=@level WHERE userID=@userID";
 
             using (SqlConnection connection = new SqlConnection(strCn))
             {
@@ -36,9 +36,15 @@ namespace FaceID
 
                 command.Parameters.Add("@nasc", SqlDbType.VarChar);
                 command.Parameters["@nasc"].Value = nasc;
-
+                
                 command.Parameters.Add("@email", SqlDbType.VarChar);
                 command.Parameters["@email"].Value = email;
+
+                command.Parameters.Add("@password", SqlDbType.VarChar);
+                command.Parameters["@password"].Value = password;
+
+                command.Parameters.Add("@level", SqlDbType.Int);
+                command.Parameters["@level"].Value = level; 
 
                 try
                 {

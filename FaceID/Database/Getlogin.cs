@@ -28,7 +28,7 @@ namespace FaceID.Database
 
                 command.Parameters.Add("@password", SqlDbType.VarChar);
                 command.Parameters["@password"].Value = password;
-                Console.WriteLine(login+ "   :   "+ password );
+                                
                 try
                 {
                     connection.Open();
