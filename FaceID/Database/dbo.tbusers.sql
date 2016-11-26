@@ -20,3 +20,9 @@ CREATE TABLE [dbo].[tbusers] (
 );
 
 
+CREATE TABLE [dbo].[config]
+(
+	[ID] INT NOT NULL IDENTITY(1,1) PRIMARY KEY, 
+    [IP] VARCHAR(250) NOT NULL, 
+    [PORT] INT NOT NULL
+)

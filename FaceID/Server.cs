@@ -42,26 +42,22 @@ namespace FaceID
         public static TcpClient client;
         public static TcpListener server = null;
         public static string ipAddress;
-
+        
         public static Code code = new Code();
 
         /************************
          * START SERVICES
          */
         public void StartServer()
-        {
-            MessageBox.Show("socket ok?");
-            try
-            {
-                Int32 port = 8080;
+        {         
+            IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Database.config.getIPandPort().ToString());
 
-                //IPAddress host = IPAddress.Parse(ipAddress);
-                IPAddress host = IPAddress.Parse("192.168.10.121");
-                server = new TcpListener(host, port);
+            try
+            {   
+                server = new TcpListener(IPAddress.Parse(IPandPort.IP), IPandPort.PORT);
 
                 // Start listening for client requests.                
-                server.Start();
-
+                server.Start();                
                 /*****************************************************
                  * LOOP PARA CRIAR CONEXÕES NODEJS E BROWSER
                  */
@@ -207,7 +203,8 @@ namespace FaceID
              }*/
 
             // informa e pausa o console para dar tempo de ler a exceção
-            Console.WriteLine("\nPressione enter para continuar...");
+            Console.WriteLine("\nÉ necessário configurar o IP e a PORTA corretamente\nPressione enter para continuar...");
+            MessageBox.Show("É necessário configurar o IP e a PORTA corretamente");
             Console.Read();
         }
 
@@ -518,10 +515,7 @@ namespace FaceID
 
             /*Thread testeDataBrowser_TH = new Thread(Server.testeDataBrowser);
             testeDataBrowser_TH.Start();*/
-        }
-
-
-
+        }      
 
     }
 }
@@ -532,4 +526,10 @@ class Code
     public string code { get; set; }
     public string msg { get; set; }
     public string userId { get; set; }
+}
+
+class IPandPORT
+{
+    public String IP { get; set; }
+    public int PORT { get; set; }
 }
