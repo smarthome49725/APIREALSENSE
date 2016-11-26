@@ -107,6 +107,7 @@
     </ApplicationDefinition>
     <Compile Include="Actions.cs" />
     <Compile Include="Converter.cs" />
+    <Compile Include="Database\config.cs" />
     <Compile Include="Database\ConnectionString.cs" />
     <Compile Include="Database\Create.cs" />
     <Compile Include="Database\Delete.cs" />
