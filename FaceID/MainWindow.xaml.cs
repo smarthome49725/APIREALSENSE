@@ -64,6 +64,17 @@ namespace FaceID
 
             InitializeComponent();
 
+            //TRY ICO
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = new Icon(@"C:/Users/ADM/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
+            ni.Visible = true;
+            ni.DoubleClick +=
+                delegate (object sender, EventArgs args)
+                {
+                    this.Show();
+                    this.WindowState = WindowState.Normal;
+                };
+
             updateUI();
 
             numFacesDetected = 0;
@@ -288,18 +299,21 @@ namespace FaceID
         }
 
         private void ReleaseResources()
-        {
-            // Stop the worker thread
-            processingThread.Abort();
-
-            // Release resources
-            faceData.Dispose();
-            senseManager.Dispose();
+        {            
+            if (processingThread.IsAlive)
+            {
+                // Stop the worker thread
+                processingThread.Abort();
+                // Release resources
+                faceData.Dispose();
+                senseManager.Dispose();
+            }
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ReleaseResources();
+            ReleaseResources();            
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -343,7 +357,14 @@ namespace FaceID
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+      
+            
+        }
 
+        private void OnStateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+                this.Hide();            
         }
     }
 
