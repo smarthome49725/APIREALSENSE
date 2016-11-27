@@ -40,6 +40,12 @@ namespace FaceID
                 nasc = nasc == "" ? "?" : nasc;
                 email = email == "" ? "?" : email;
 
+                if (nome == "?" && fone == "?" && nasc == "?" && email == "?")
+                {
+                    nome = ""; fone = ""; nasc = ""; email = "";
+                }
+                
+
                 commandText = "SELECT * FROM tbusers WHERE (" +
                         "Nome LIKE '%" + nome + "%')" +
                     " OR (tel LIKE '%" + fone + "%')" +
