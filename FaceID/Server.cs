@@ -16,6 +16,7 @@ using System.Net.WebSockets;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
+using System.Net.Mail;
 
 
 namespace FaceID
@@ -50,7 +51,7 @@ namespace FaceID
          */
         public void StartServer()
         {         
-            IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Database.config.getIPandPort().ToString());
+            IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Read.getIPandPort().ToString());
 
             try
             {   
@@ -229,7 +230,7 @@ namespace FaceID
                     {
                         // translate bytes of request to string            
                         data = System.Text.Encoding.ASCII.GetString(bytes, 0, msgLength);
-                        Actions.actions(data);
+                        //Actions.actions(data);
                     }
                     else
                     {
@@ -515,7 +516,55 @@ namespace FaceID
 
             /*Thread testeDataBrowser_TH = new Thread(Server.testeDataBrowser);
             testeDataBrowser_TH.Start();*/
-        }      
+        }
+
+       /* public static Task<string> AsyncLoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
+        {
+            return Task.Run(() =>
+            {
+                return LoadUser(userId);
+            });
+        }*/
+
+
+        public static void sendMail(String smtpServer, Int32 port, bool enableSsl, String credentialEmail, String credentialPassword, String from, String to1, String to2, String to3, String subject, String body, bool isBodyHtml)
+        {
+            //smtpServer: smtp.gmail.com
+            //from: smarthome49725@gmail.com
+            //Port: 587
+            Task.Run(() =>
+            {               
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient(smtpServer);
+
+                mail.From = new MailAddress(from);
+                mail.To.Add(to1);
+                mail.To.Add(to2);
+                mail.To.Add(to3);
+                mail.Subject = subject;
+                mail.IsBodyHtml = isBodyHtml;
+                mail.Body = body;
+                SmtpServer.Port = port;
+                SmtpServer.Credentials = new System.Net.NetworkCredential(credentialEmail, credentialPassword);
+                SmtpServer.EnableSsl = enableSsl;
+                SmtpServer.Send(mail);
+                Console.WriteLine("");
+                Console.WriteLine("Email Sended to : " + mail.To.ToString());
+                }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unsent Email");
+                Console.WriteLine(ex.ToString());
+            }
+
+            });
+        }
+
+
+
+
 
     }
 }

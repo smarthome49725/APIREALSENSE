@@ -12,62 +12,72 @@ namespace FaceID
 {
     class Actions
     {
-        static Codigo codigo;
-        
+        static dynamic codigo;
+
         public static void actions(string cod)
-        {  
-            /*codigo.userID = 0;
-            codigo.rect = false;            
-            codigo.nome = "0";
-            codigo.tel = "0";
-            codigo.nasc = "0";
-            codigo.email = "0";
-            codigo.password = "0";*/
-
+        {
             Console.WriteLine(cod);
-            codigo = JsonConvert.DeserializeObject<Codigo>(cod);
 
-            switch (codigo.cod)
+            codigo = JsonConvert.DeserializeObject<dynamic>(cod);
+
+            Console.WriteLine(codigo);
+
+            String code = codigo.cod;
+
+            switch (code)
             {
                 case "getlogin":
-                    getLogin(codigo.login, codigo.password);
+                    getLogin((string)codigo.login, (string)codigo.password);
                     break;
                 case "rect":
-                    rect(codigo.level);
+                    rect((int)codigo.level);
                     break;
                 case "registerUser":
-                    registerUser(codigo.userID, codigo.level, codigo.nome, codigo.tel, codigo.nasc, codigo.email, codigo.password, codigo.registerLevel);
+                    registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
+                    break;
+                case "registerUserBL":
+                    registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, "", "", "", "", 0, (string)codigo.blacklist);
                     break;
                 case "unregisterUser":
-                    unregisterUser(codigo.userID, codigo.level);
+                    unregisterUser((int)codigo.userID, (int)codigo.level);
                     break;
                 case "geniduser":
                     MainWindow.doRegister = true;
                     Console.WriteLine("doRegister");
                     break;
                 case "getuser":
-                    LoadUser(codigo.userID, codigo.level, codigo.nome, codigo.tel, codigo.nasc, codigo.email);
+                    LoadUser(0, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
                 case "updateuser":
-                    updateUser(codigo.userID, codigo.level, codigo.nome, codigo.tel, codigo.nasc, codigo.email, codigo.password, codigo.registerLevel);
+                    updateUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
                     Console.WriteLine("updateuser!");
                     break;
+                case "updatealertemail":
+                    updatealertemail((int)codigo.level, (string)codigo.email1, (string)codigo.email2, (string)codigo.email3);
+                    Console.WriteLine("updatealertemail!");
+                    break;
+                case "getalertemail":
+                    getAlertemail((int)codigo.level);
+                    break;                    
             }
+            codigo = null;
         }
 
+
         static void getLogin(String login, String password)
-        {            
-            int level = Database.GetLogin.getLogin(login, password);            
+        {
+            int level = Read.getLogin(login, password);
             if (level != -1)
             {
                 Server.sendMsg(255, "200", level.ToString(), "");
-            }else
+            }
+            else
             {
                 Server.sendMsg(255, "404", level.ToString(), "");
             }
 
-            
+
         }
 
         static void rect(int level)
@@ -90,15 +100,14 @@ namespace FaceID
             {
                 Server.conBROW3canWrite = codigo.rect;
             }
-            //Server.sendMsg(codigo.level, "Rect level" + codigo.level + ": " + codigo.rect);       
+
             Console.WriteLine("Rect level" + codigo.level + ": " + codigo.rect);
         }
 
-        static void registerUser(int userId, int level, string nome, string tel, string nasc, string email, string password, int registerLevel)
+        static void registerUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "")
         {
             Console.WriteLine("registerUser true");
-            Create create = new Create();
-            create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel);
+            Create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
             MainWindow.SaveDatabaseToFile();
 
             Actions.LoadUser(userId, level);
@@ -116,48 +125,49 @@ namespace FaceID
             Actions.LoadUser(userId, level);
         }
 
-        private static String LoadUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "")
+        public static void LoadUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "")
         {
-            Console.WriteLine("LoadUser: " + userId);
-            Read reader = new Read();
-            String userJSON = reader.Reader(userId, nome, tel, nasc, email);
+            Task.Run(() =>
+            {                
+                String userJSON = Read.Reader(userId, level, nome, tel, nasc, email);
 
-            Server.sendMsg(level, "userData", userJSON, "");
-            return userJSON;
-        }
-        
-        public static Task<string> AsyncLoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
-        {
-            return Task.Run(() =>
-            {
-                return LoadUser(userId);
+                Server.sendMsg(level, "userData", userJSON, "");
+                userJSON = null;
             });
         }
 
-        public static void updateUser(int userId, int level, string nome, string tel, string nasc, string email, string password, int registerLevel)
+        public static void updateUser(int userId = 0, int level = 0, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "false")
         {
-            Update update = new Update();
-            update.Alterar(userId, nome, tel, nasc, email, password, registerLevel);
+            Update.Alterar(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
             Actions.LoadUser(userId, level);
+        }
+
+        public static void updatealertemail(int level = 255, string email1 = "", string email2 = "", string email3 = "")
+        {
+            Console.WriteLine(email1);
+            Update.updateAlertEmail(email1, email2, email3);
+        }
+
+        public static void getAlertemail(int level = 255)
+        {
+            object emails = Read.getAlertEmail();
+            Server.sendMsg(level, "getalertemail", emails.ToString(), "");
+            //Console.WriteLine("Emails Sended For Browser: " + emails);
+        }
+
+        public static void sendAlertEmail()
+        {
+            Task.Run(() =>
+            {
+                object emails = Read.getAlertEmail();
+                dynamic JSONemails = JsonConvert.DeserializeObject(emails.ToString());
+
+                Console.WriteLine((string)JSONemails.email1);
+                Server.sendMail("smtp.gmail.com", 587, true, "smarthome49725@gmail.com", "ninja49725*", "smarthome49725@gmail.com", (String)JSONemails.email1, (String)JSONemails.email2, (String)JSONemails.email3, "SH2", "<h1>SUSPEITO</h1>", true);
+            });
+
         }
     }
 }
 
-class Codigo
-{
-    public int userID { get; set; }
-
-    public int level { get; set; }
-    public string cod { get; set; }
-
-    public bool rect { get; set; }
-
-    public int registerLevel { get; set; }
-    public string login { get; set; }
-    public string password { get; set; }
-    public string nome { get; set; }
-    public string tel { get; set; }
-    public string nasc { get; set; }
-    public string email { get; set; }
-}
 

@@ -12,29 +12,26 @@ namespace FaceID
 {
     class Read
     {
+        static object IPandPORT;
+        static object emails;
+        static int level = -1;
 
-        //VS2012
-        //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
-        //vs2015
-        //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True;";
         static string strCn = ConnectionString.getConnectionString();
+        
+        //static String userJSON;
+        static List<string> lista = new List<string>();
 
-
-        object userData;
-        String userJSON;
-        List<string> lista = new List<string>();
-
-        public String Reader(int userID = 0, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
+        public static dynamic Reader(int userID = 0, int level = 255, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
         {            
-            string commandText;
-
-            if (userID != 0)
+            dynamic userData = null;
+            string commandText = null;            
+                        
+            if (userID != 0) 
             {
                 commandText = "SELECT * FROM tbusers WHERE userID=@userID";
             }
             else
-            {
-
+            {                
                 nome = nome == "" ? "?" : nome;
                 fone = fone == "" ? "?" : fone;
                 nasc = nasc == "" ? "?" : nasc;
@@ -58,6 +55,7 @@ namespace FaceID
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
 
+                //User detected 1by camera
                 if (userID != 0)
                 {
                     command.Parameters.Add("@userID", SqlDbType.Int);
@@ -79,17 +77,26 @@ namespace FaceID
                             tel = reader["tel"].ToString(),
                             nasc = reader["nasc"].ToString(),
                             email = reader["email"].ToString(),
-                            level = reader["level"].ToString()
-                        };                       
+                            level = reader["level"].ToString(),
+                            blacklist = reader["blacklist"].ToString()
+                        };
 
+                        
+                        //User detected by camera
+                        if (level == 255 && userData.blacklist == "True")
+                        {
+                            Console.WriteLine("SUSPEITO DETECTED!");                            
+                            Actions.sendAlertEmail();
+                        }
+                        
                         Console.WriteLine(userData.ToString());
-                        lista.Add(JsonConvert.SerializeObject(userData));                        
-                           
-                       
+                        lista.Add(JsonConvert.SerializeObject(userData));                       
 
-                    }                 
-                    
-                    userJSON = JsonConvert.SerializeObject(lista);
+                    }
+
+                    userData = JsonConvert.SerializeObject(lista);
+
+                    lista.Clear();
 
                     // Call Close when done reading.
                     reader.Close();
@@ -102,8 +109,128 @@ namespace FaceID
                 connection.Close();
                 connection.Dispose();
             }
-            return userJSON;
+            return userData;
         }
+
+
+        public static object getAlertEmail()
+        {            
+            string commandText = "SELECT * FROM contact_email WHERE ID=1";
+
+            using (SqlConnection connection = new SqlConnection(strCn))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        emails = new
+                        {
+                            email1 = reader["email1"].ToString(),
+                            email2 = reader["email2"].ToString(),
+                            email3 = reader["email3"].ToString()                            
+                        };
+
+                    }
+
+                    emails = JsonConvert.SerializeObject(emails);                    
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                connection.Close();
+                connection.Dispose();
+            }
+            return emails;
+        }
+
+
+
+        public static int getLogin(string login, string password)
+        {
+            string commandText = "SELECT * FROM tbusers WHERE email=@login and password=@password";
+
+            using (SqlConnection connection = new SqlConnection(strCn))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
+
+                command.Parameters.Add("@login", SqlDbType.VarChar);
+                command.Parameters["@login"].Value = login;
+
+                command.Parameters.Add("@password", SqlDbType.VarChar);
+                command.Parameters["@password"].Value = password;
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        level = Convert.ToInt16(reader["level"]);
+                    }
+                    else
+                    {
+                        level = -1;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                connection.Close();
+                connection.Dispose();
+            }
+            return level;
+        }
+
+
+        public static object getIPandPort(int ID = 1)
+        {
+            //string objIPandPORT;
+            string commandText = "SELECT * FROM config WHERE ID=1";
+
+            using (SqlConnection connection = new SqlConnection(strCn))
+            {
+                SqlCommand command = new SqlCommand(commandText, connection);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        IPandPORT = new
+                        {
+                            IP = reader["IP"].ToString(),
+                            PORT = reader["PORT"].ToString(),
+                        };
+                    }
+
+                    IPandPORT = JsonConvert.SerializeObject(IPandPORT);
+
+                    // Call Close when done reading.
+                    reader.Close();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                connection.Close();
+                connection.Dispose();
+            }
+            return IPandPORT;
+        }
+
     }
 
 }

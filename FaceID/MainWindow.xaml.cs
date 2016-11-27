@@ -229,7 +229,7 @@ namespace FaceID
 
                                     if (flagUserId != userId)
                                     {
-                                        Actions.AsyncLoadUser(Convert.ToInt16(userId));
+                                        Actions.LoadUser(Convert.ToInt16(userId), 255);
                                         flagUserId = userId;
                                     }
 
@@ -330,18 +330,19 @@ namespace FaceID
         {
             Server.startTesteCanvasHTML();
             Console.WriteLine("startTesteCanvasHTML!");
+            
         }
 
         private void configIP_Click(object sender, RoutedEventArgs e)
         {
-            Database.config.configureIPandPORT(IP.Text, Convert.ToInt32(PORT.Text));
+            Update.configureIPandPORT(IP.Text, Convert.ToInt32(PORT.Text));
             system_status.Items.Add(DateTime.UtcNow + "     " + "IP configurado para:" + IP.Text);
             system_status.Items.Add(DateTime.UtcNow + "     " + "PORTA configurada para:" + PORT.Text);
         }
 
         public void updateUI()
         {
-            IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Database.config.getIPandPort().ToString());
+            IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Read.getIPandPort().ToString());
             IP.Text = IPandPort.IP;
             PORT.Text = IPandPort.PORT.ToString(); 
 
@@ -357,7 +358,11 @@ namespace FaceID
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-      
+            Console.WriteLine("Simulação da Câmera lendo o usuário...");
+             Actions.LoadUser(2, 255);
+            //object emails = Read.getAlertEmail();
+            //Console.WriteLine(emails);
+            //Actions.sendAlertEmail();
             
         }
 

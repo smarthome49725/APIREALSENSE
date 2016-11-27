@@ -17,34 +17,60 @@ namespace FaceID
         //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
         static string strCn = ConnectionString.getConnectionString();
 
-        public void Adiciona(int userID, string nome, string fone, string nasc, string email, string password, int level)
-        {            
-            string commandText = "INSERT INTO tbusers (userID, Nome, Tel, Nasc, Email, password, level) VALUES (@userID, @nome, @fone, @nasc, @email, @password, @level)";                   
+        public static void Adiciona(int userID, string nome, string fone, string nasc, string email, string password, int level, string blacklist)
+        {
+            string commandText = null;
+            if (blacklist == "True")
+            {                
+                commandText = "INSERT INTO tbusers (userID, Nome, blacklist) VALUES (@userID, @nome, @blacklist)";
+            }
+            else
+            {
+                commandText = "INSERT INTO tbusers (userID, Nome, Tel, Nasc, Email, password, level, blacklist) VALUES (@userID, @nome, @fone, @nasc, @email, @password, @level, @blacklist)";
+            }
 
             using (SqlConnection connection = new SqlConnection(strCn))
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
 
-                command.Parameters.Add("@userID", SqlDbType.Int);
-                command.Parameters["@userID"].Value = userID;
+                if (blacklist == "true")
+                {
+                    command.Parameters.Add("@userID", SqlDbType.Int);
+                    command.Parameters["@userID"].Value = userID;
 
-                command.Parameters.Add("@nome", SqlDbType.VarChar);
-                command.Parameters["@nome"].Value = nome;
+                    command.Parameters.Add("@nome", SqlDbType.VarChar);
+                    command.Parameters["@nome"].Value = nome;
 
-                command.Parameters.Add("@fone", SqlDbType.VarChar);
-                command.Parameters["@fone"].Value = fone;
+                    command.Parameters.Add("@blacklist", SqlDbType.VarChar);
+                    command.Parameters["@blacklist"].Value = blacklist;
+                }
+                else
+                {
+                    command.Parameters.Add("@userID", SqlDbType.Int);
+                    command.Parameters["@userID"].Value = userID;
 
-                command.Parameters.Add("@nasc", SqlDbType.VarChar);
-                command.Parameters["@nasc"].Value = nasc;
+                    command.Parameters.Add("@nome", SqlDbType.VarChar);
+                    command.Parameters["@nome"].Value = nome;
 
-                command.Parameters.Add("@email", SqlDbType.VarChar);
-                command.Parameters["@email"].Value = email;
+                    command.Parameters.Add("@fone", SqlDbType.VarChar);
+                    command.Parameters["@fone"].Value = fone;
 
-                command.Parameters.Add("@password", SqlDbType.VarChar);
-                command.Parameters["@password"].Value = password;
+                    command.Parameters.Add("@nasc", SqlDbType.VarChar);
+                    command.Parameters["@nasc"].Value = nasc;
 
-                command.Parameters.Add("@level", SqlDbType.Int);
-                command.Parameters["@level"].Value = level;
+                    command.Parameters.Add("@email", SqlDbType.VarChar);
+                    command.Parameters["@email"].Value = email;
+
+                    command.Parameters.Add("@password", SqlDbType.VarChar);
+                    command.Parameters["@password"].Value = password;
+
+                    command.Parameters.Add("@level", SqlDbType.Int);
+                    command.Parameters["@level"].Value = level;
+
+                    command.Parameters.Add("@blacklist", SqlDbType.VarChar);
+                    command.Parameters["@blacklist"].Value = blacklist;
+
+                }
 
                 try
                 {

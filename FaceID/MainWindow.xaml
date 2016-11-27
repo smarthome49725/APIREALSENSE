@@ -7,7 +7,7 @@
         Closing="Window_Closing" Height="489.5" Width="634.5" StateChanged="OnStateChanged">
 
     <Grid HorizontalAlignment="Left" Width="601" Height="418" VerticalAlignment="Top" Margin="10,10,0,0" Background="#FFF5ECEC">
-        <StackPanel Background="Green" HorizontalAlignment="Right" Height="168" VerticalAlignment="Top" Width="158" Margin="0,144,-189,0">
+        <StackPanel Background="Green" HorizontalAlignment="Right" Height="168" VerticalAlignment="Top" Width="158" Margin="0,116,24,0">
             <Label x:Name="TESTES_DEPURAÇÃO" Content="TESTES" HorizontalContentAlignment="Center"/>
             <TextBox x:Name="cod" Height="23" TextWrapping="Wrap" Text="Codigo" TextChanged="textBox_TextChanged"/>
             <TextBox x:Name="msg" Height="22" TextWrapping="Wrap" Text="msg"/>
