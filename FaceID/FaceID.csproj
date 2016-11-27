@@ -114,6 +114,7 @@
     <Compile Include="Database\GetLogin.cs" />
     <Compile Include="Database\Read.cs" />
     <Compile Include="Database\Update.cs" />
+    <Compile Include="Database\UpdateAlertEmail.cs" />
     <Compile Include="Server.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
