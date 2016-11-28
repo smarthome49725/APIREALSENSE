@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using FaceID;
 using System.Windows;
+using System.IO;
 
 namespace FaceID
 {
@@ -32,7 +33,7 @@ namespace FaceID
                 case "rect":
                     rect((int)codigo.level);
                     break;
-                case "registerUser":
+                case "registerUser":                    
                     registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
                     break;
                 case "registerUserBL":
@@ -46,6 +47,12 @@ namespace FaceID
                     Console.WriteLine("doRegister");
                     break;
                 case "getuser":
+                    Console.WriteLine("1");
+                    
+                    Console.WriteLine((string)codigo.nome);
+                    Console.WriteLine((string)codigo.tel);
+                    Console.WriteLine((string)codigo.nasc);
+                    Console.WriteLine((string)codigo.email);              
                     LoadUser(0, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
@@ -59,26 +66,31 @@ namespace FaceID
                     break;
                 case "getalertemail":
                     getAlertemail((int)codigo.level);
-                    break;                    
+                    break;
+                case "getimglogin":
+                    getImgLogin((int)codigo.level, (int)codigo.userID);
+                    break;
             }
             codigo = null;
         }
 
 
         static void getLogin(String login, String password)
-        {
-            int level = Read.getLogin(login, password);
-            if (level != -1)
-            {
-                Server.sendMsg(255, "200", level.ToString(), "");
+        {             
+            dynamic userData = Read.getLogin(login, password);
+            Console.WriteLine(userData);            
+            if (userData == "null")
+            {                
+                Server.sendMsg(255, "404", userData, "");
             }
             else
-            {
-                Server.sendMsg(255, "404", level.ToString(), "");
+            {                
+                Server.sendMsg(255, "200", userData, "");
+               
             }
 
-
         }
+
 
         static void rect(int level)
         {
@@ -128,9 +140,10 @@ namespace FaceID
         public static void LoadUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "")
         {
             Task.Run(() =>
-            {                
+            {
+                Console.WriteLine("2");
                 String userJSON = Read.Reader(userId, level, nome, tel, nasc, email);
-
+                Console.WriteLine("3");
                 Server.sendMsg(level, "userData", userJSON, "");
                 userJSON = null;
             });
@@ -153,6 +166,22 @@ namespace FaceID
             object emails = Read.getAlertEmail();
             Server.sendMsg(level, "getalertemail", emails.ToString(), "");
             //Console.WriteLine("Emails Sended For Browser: " + emails);
+        }
+
+        public static void getImgLogin(int level = 255, int userID = 0)
+        {
+            String imgDefault = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
+            String imgUser = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
+            
+            if (File.Exists(imgUser))
+            {
+                Server.sendFile(level, imgUser);
+            }
+            else
+            {
+                Server.sendFile(level, imgDefault);
+            }
+            
         }
 
         public static void sendAlertEmail()

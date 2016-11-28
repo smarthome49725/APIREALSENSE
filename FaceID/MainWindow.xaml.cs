@@ -299,7 +299,7 @@ namespace FaceID
         }
 
         private void ReleaseResources()
-        {            
+        {
             if (processingThread.IsAlive)
             {
                 // Stop the worker thread
@@ -308,12 +308,12 @@ namespace FaceID
                 faceData.Dispose();
                 senseManager.Dispose();
             }
-            
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ReleaseResources();            
+            ReleaseResources();
         }
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -330,7 +330,7 @@ namespace FaceID
         {
             Server.startTesteCanvasHTML();
             Console.WriteLine("startTesteCanvasHTML!");
-            
+
         }
 
         private void configIP_Click(object sender, RoutedEventArgs e)
@@ -344,7 +344,7 @@ namespace FaceID
         {
             IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Read.getIPandPort().ToString());
             IP.Text = IPandPort.IP;
-            PORT.Text = IPandPort.PORT.ToString(); 
+            PORT.Text = IPandPort.PORT.ToString();
 
         }
 
@@ -358,18 +358,22 @@ namespace FaceID
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Simulação da Câmera lendo o usuário...");
-             Actions.LoadUser(2, 255);
+            //Console.WriteLine("Simulação da Câmera lendo o usuário...");
+            //Actions.LoadUser(2, 255);
             //object emails = Read.getAlertEmail();
             //Console.WriteLine(emails);
             //Actions.sendAlertEmail();
-            
+
+            String path = @"C:\Users\ADM\Documents\SH2\user.png";
+
+            Server.sendFile(255, path);    
+
         }
 
         private void OnStateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized)
-                this.Hide();            
+                this.Hide();
         }
     }
 

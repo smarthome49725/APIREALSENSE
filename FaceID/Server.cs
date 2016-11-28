@@ -43,22 +43,22 @@ namespace FaceID
         public static TcpClient client;
         public static TcpListener server = null;
         public static string ipAddress;
-        
+
         public static Code code = new Code();
 
         /************************
          * START SERVICES
          */
         public void StartServer()
-        {         
+        {
             IPandPORT IPandPort = JsonConvert.DeserializeObject<IPandPORT>(Read.getIPandPort().ToString());
 
             try
-            {   
+            {
                 server = new TcpListener(IPAddress.Parse(IPandPort.IP), IPandPort.PORT);
 
                 // Start listening for client requests.                
-                server.Start();                
+                server.Start();
                 /*****************************************************
                  * LOOP PARA CRIAR CONEXÕES NODEJS E BROWSER
                  */
@@ -518,13 +518,13 @@ namespace FaceID
             testeDataBrowser_TH.Start();*/
         }
 
-       /* public static Task<string> AsyncLoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
-        {
-            return Task.Run(() =>
-            {
-                return LoadUser(userId);
-            });
-        }*/
+        /* public static Task<string> AsyncLoadUser(int userId = 0, string nome = "", string tel = "", string nasc = "", string email = "")
+         {
+             return Task.Run(() =>
+             {
+                 return LoadUser(userId);
+             });
+         }*/
 
 
         public static void sendMail(String smtpServer, Int32 port, bool enableSsl, String credentialEmail, String credentialPassword, String from, String to1, String to2, String to3, String subject, String body, bool isBodyHtml)
@@ -533,34 +533,102 @@ namespace FaceID
             //from: smarthome49725@gmail.com
             //Port: 587
             Task.Run(() =>
-            {               
-            try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient(smtpServer);
+                try
+                {
+                    MailMessage mail = new MailMessage();
+                    SmtpClient SmtpServer = new SmtpClient(smtpServer);
 
-                mail.From = new MailAddress(from);
-                mail.To.Add(to1);
-                mail.To.Add(to2);
-                mail.To.Add(to3);
-                mail.Subject = subject;
-                mail.IsBodyHtml = isBodyHtml;
-                mail.Body = body;
-                SmtpServer.Port = port;
-                SmtpServer.Credentials = new System.Net.NetworkCredential(credentialEmail, credentialPassword);
-                SmtpServer.EnableSsl = enableSsl;
-                SmtpServer.Send(mail);
-                Console.WriteLine("");
-                Console.WriteLine("Email Sended to : " + mail.To.ToString());
+                    mail.From = new MailAddress(from);
+                    mail.To.Add(to1);
+                    mail.To.Add(to2);
+                    mail.To.Add(to3);
+                    mail.Subject = subject;
+                    mail.IsBodyHtml = isBodyHtml;
+                    mail.Body = body;
+                    SmtpServer.Port = port;
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(credentialEmail, credentialPassword);
+                    SmtpServer.EnableSsl = enableSsl;
+                    SmtpServer.Send(mail);
+                    Console.WriteLine("");
+                    Console.WriteLine("Email Sended to : " + mail.To.ToString());
                 }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unsent Email");
-                Console.WriteLine(ex.ToString());
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Unsent Email");
+                    Console.WriteLine(ex.ToString());
+                }
 
             });
         }
+
+        
+
+        public static void sendFile(int level, String path)
+        {
+            Byte[] imgRaw = null;
+
+            if (File.Exists(path))
+            {               
+                Byte[] rawData = File.ReadAllBytes(path);
+                imgRaw = Converter.encodeData(rawData);                
+                Console.WriteLine("sending image...");                
+            }
+            else
+            {
+                Console.WriteLine("Image does not exist!");
+            }
+            
+            //TRY SEND MSG BROWSER1+++
+            if (level == 1 || (level == 255 && conBROW1canWrite))
+            {
+                try
+                {
+                    streamBROW1.Write(imgRaw, 0, imgRaw.Length);
+                }
+                catch
+                {
+                    conBROW1canWrite = false;
+                    Console.WriteLine("Exception sendMsg BROWSER 111");
+                }
+            }
+            //TRY SEND MSG BROWSER1---
+
+            //TRY SEND MSG BROWSER2+++
+            if (level == 2 || (level == 255 && conBROW2canWrite))
+            {
+
+                try
+                {
+                    streamBROW2.Write(imgRaw, 0, imgRaw.Length);
+                }
+                catch
+                {
+                    conBROW2canWrite = false;
+                    Console.WriteLine("Exception sendMsg BROWSER 222");
+                }
+            }
+            //TRY SEND MSG BROWSER2---
+
+            //TRY SEND MSG BROWSER3+++
+            if (level == 3 || (level == 255 && conBROW3canWrite))
+            {
+                try
+                {
+                    streamBROW3.Write(imgRaw, 0, imgRaw.Length);
+                }
+                catch
+                {
+                    conBROW3canWrite = false;
+                    Console.WriteLine("Exception sendMsg BROWSER 333");
+                }
+            }
+            //TRY SEND MSG BROWSER3---
+
+        }
+
+
+
 
 
 

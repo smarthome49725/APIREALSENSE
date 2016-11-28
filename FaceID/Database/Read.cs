@@ -152,10 +152,11 @@ namespace FaceID
 
 
 
-        public static int getLogin(string login, string password)
+        public static dynamic getLogin(string login, string password)
         {
+            dynamic userData = null;
             string commandText = "SELECT * FROM tbusers WHERE email=@login and password=@password";
-
+                        
             using (SqlConnection connection = new SqlConnection(strCn))
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
@@ -165,20 +166,25 @@ namespace FaceID
 
                 command.Parameters.Add("@password", SqlDbType.VarChar);
                 command.Parameters["@password"].Value = password;
-
+                
                 try
                 {
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        level = Convert.ToInt16(reader["level"]);
+                    while (reader.Read())
+                    {                        
+                        userData = new
+                        {
+                            userID = reader["userID"].ToString(),
+                            nome = reader["nome"].ToString(),
+                            tel = reader["tel"].ToString(),
+                            nasc = reader["nasc"].ToString(),
+                            email = reader["email"].ToString(),
+                            level = reader["level"].ToString(),
+                            blacklist = reader["blacklist"].ToString()
+                        };
                     }
-                    else
-                    {
-                        level = -1;
-                    }
-
+                    userData = JsonConvert.SerializeObject(userData);
                 }
                 catch (Exception ex)
                 {
@@ -188,7 +194,8 @@ namespace FaceID
                 connection.Close();
                 connection.Dispose();
             }
-            return level;
+            
+            return userData;
         }
 
 
