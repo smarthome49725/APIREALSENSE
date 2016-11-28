@@ -31,7 +31,7 @@ namespace FaceID
                     getLogin((string)codigo.login, (string)codigo.password);
                     break;
                 case "rect":
-                    rect((int)codigo.level);
+                    rect((int)codigo.level, (bool)codigo.rect);
                     break;
                 case "registerUser":                    
                     registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
@@ -92,12 +92,12 @@ namespace FaceID
         }
 
 
-        static void rect(int level)
+        static void rect(int level, bool ONO_FF)
         {
             if (level == 1)
             {
-                Server.conBROW1canWrite = codigo.rect;
-                if (codigo.rect)
+                Server.conBROW1canWrite = ONO_FF;
+                if (ONO_FF)
                 {
                     Console.WriteLine("Configure Realsense");
                     MainWindow.ConfigureRealSense();
@@ -106,14 +106,14 @@ namespace FaceID
             }
             if (level == 2)
             {
-                Server.conBROW2canWrite = codigo.rect;
+                Server.conBROW2canWrite = ONO_FF;
             }
             if (level == 3)
             {
-                Server.conBROW3canWrite = codigo.rect;
+                Server.conBROW3canWrite = ONO_FF;
             }
 
-            Console.WriteLine("Rect level" + codigo.level + ": " + codigo.rect);
+            Console.WriteLine("Rect level" + level + ": " + ONO_FF);
         }
 
         static void registerUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "")
@@ -170,8 +170,8 @@ namespace FaceID
 
         public static void getImgLogin(int level = 255, int userID = 0)
         {
-            String imgDefault = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
-            String imgUser = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
+            String imgDefault = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
+            String imgUser = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
             
             if (File.Exists(imgUser))
             {

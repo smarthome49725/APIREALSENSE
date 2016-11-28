@@ -66,7 +66,7 @@ namespace FaceID
 
             //TRAY ICO
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = new Icon(@"C:/Users/ADM/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
+            ni.Icon = new Icon(@"C:/Users/Mostratec/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
             ni.Visible = true;
             ni.DoubleClick +=
                 delegate (object sender, EventArgs args)
@@ -84,11 +84,11 @@ namespace FaceID
             doUnregister = false;
 
             // Start SenseManage and configure the face module
-            ////ConfigureRealSense();
+            //ConfigureRealSense();
 
             // Start the worker thread
             processingThread = new Thread(new ThreadStart(ProcessingThread));
-            ////processingThread.Start(); 
+            //processingThread.Start(); 
 
         }
 
@@ -98,7 +98,7 @@ namespace FaceID
             senseManager = PXCMSenseManager.CreateInstance();
 
             // Enable the color stream        
-            senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 30);
+            //senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 30);
 
             // Enable the face module
             senseManager.EnableFace();
@@ -300,15 +300,12 @@ namespace FaceID
 
         private void ReleaseResources()
         {
-            if (processingThread.IsAlive)
-            {
-                // Stop the worker thread
-                processingThread.Abort();
-                // Release resources
-                faceData.Dispose();
-                senseManager.Dispose();
-            }
+            // Stop the worker thread
+            processingThread.Abort();
 
+            // Release resources
+            faceData.Dispose();
+            senseManager.Dispose();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
