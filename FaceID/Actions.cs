@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using FaceID;
 using System.Windows;
 using System.IO;
+using System.Threading;
 
 namespace FaceID
 {
@@ -118,11 +119,13 @@ namespace FaceID
 
         static void registerUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "")
         {
+            Task.Run(() =>
+            {            
             Console.WriteLine("registerUser true");
             Create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
-            MainWindow.SaveDatabaseToFile();
-
+            MainWindow.SaveDatabaseToFile();            
             Actions.LoadUser(userId, level);
+            });
         }
 
         static void unregisterUser(int userId, int level)
@@ -156,8 +159,7 @@ namespace FaceID
         }
 
         public static void updatealertemail(int level = 255, string email1 = "", string email2 = "", string email3 = "")
-        {
-            Console.WriteLine(email1);
+        {            
             Update.updateAlertEmail(email1, email2, email3);
         }
 
@@ -170,8 +172,8 @@ namespace FaceID
 
         public static void getImgLogin(int level = 255, int userID = 0)
         {
-            String imgDefault = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
-            String imgUser = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
+            String imgDefault = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
+            String imgUser = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
             
             if (File.Exists(imgUser))
             {

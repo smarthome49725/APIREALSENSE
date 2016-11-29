@@ -66,7 +66,7 @@ namespace FaceID
 
             //TRAY ICO
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = new Icon(@"C:/Users/Mostratec/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
+            ni.Icon = new Icon(@"C:/Users/ADM/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
             ni.Visible = true;
             ni.DoubleClick +=
                 delegate (object sender, EventArgs args)
@@ -300,8 +300,11 @@ namespace FaceID
 
         private void ReleaseResources()
         {
-            // Stop the worker thread
-            processingThread.Abort();
+            if (processingThread.IsAlive)
+            {
+                // Stop the worker thread
+                processingThread.Abort();
+            }
 
             // Release resources
             faceData.Dispose();

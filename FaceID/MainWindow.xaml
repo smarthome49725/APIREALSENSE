@@ -7,7 +7,7 @@
         Closing="Window_Closing" Height="489.5" Width="634.5" StateChanged="OnStateChanged">
 
     <Grid HorizontalAlignment="Left" Width="601" Height="418" VerticalAlignment="Top" Margin="10,10,0,0" Background="#FFF5ECEC">
-        <StackPanel Background="Green" HorizontalAlignment="Right" Height="168" VerticalAlignment="Top" Width="158" Margin="0,116,24,0">
+        <StackPanel Background="Green" HorizontalAlignment="Right" Height="168" VerticalAlignment="Top" Width="158" Margin="0,144,-198,0">
             <Label x:Name="TESTES_DEPURAÇÃO" Content="TESTES" HorizontalContentAlignment="Center"/>
             <TextBox x:Name="cod" Height="23" TextWrapping="Wrap" Text="Codigo" TextChanged="textBox_TextChanged"/>
             <TextBox x:Name="msg" Height="22" TextWrapping="Wrap" Text="msg"/>
@@ -24,11 +24,11 @@
         <Button x:Name="configIP" Content="SAVE" Click="configIP_Click" Margin="200,178,203,220" Background="#FF00CC99"/>
         <Button x:Name="btnDeleteDatabase" Content="Del Database" Click="btnDeleteDatabase_Click" Margin="200,233,203,160" Background="Red"/>
         <StackPanel Background="#FFEAE0E0" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="601">
-            <Image x:Name="image1" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="521" Source="C:\Users\Mostratec\Documents\SH2\shart_home_automated.png" Margin="80,0,0,0"/>
+            <Image x:Name="image1" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="521" Source="C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\shart_home_automated.png" Margin="80,0,0,0"/>
         </StackPanel>
         <Label x:Name="label1" FontSize="16" Content="LOG" HorizontalContentAlignment="Center" RenderTransformOrigin="0.504,1.449" Margin="10,295,10,89"/>
         <ListBox x:Name="system_status" Height="76" VerticalAlignment="Bottom" Margin="10,0,10,13"/>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="93" Source="C:/Users/Mostratec/Documents/SH2/APIREALSENSE/FaceID/IMG/logoSH2.png" Margin="0,-1,0,0"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="78" VerticalAlignment="Top" Width="93" Source="C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\logoSH2.png" Margin="0,-1,0,0"/>
     </Grid>
 
 </Window>
