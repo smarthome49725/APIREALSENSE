@@ -66,7 +66,7 @@ namespace FaceID
 
             //TRAY ICO
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = new Icon(@"C:/Users/ADM/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
+            ni.Icon = new Icon(@"C:/Users/Mostratec/Documents/SH2/APIREALSENSE/FaceID/IMG/sh2.ico");
             ni.Visible = true;
             ni.DoubleClick +=
                 delegate (object sender, EventArgs args)
@@ -364,7 +364,7 @@ namespace FaceID
             //Console.WriteLine(emails);
             //Actions.sendAlertEmail();
 
-            String path = @"C:\Users\ADM\Documents\SH2\user.png";
+            String path = @"C:\Users\Mostratec\Documents\SH2\user.png";
 
             Server.sendFile(255, path);    
 

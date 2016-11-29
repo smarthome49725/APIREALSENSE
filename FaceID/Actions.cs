@@ -98,9 +98,10 @@ namespace FaceID
             if (level == 1)
             {
                 Server.conBROW1canWrite = ONO_FF;
-                if (ONO_FF)
+                Console.WriteLine("ProcessingThread.IsAlive?: " + !MainWindow.processingThread.IsAlive);
+                if (ONO_FF && !MainWindow.processingThread.IsAlive)
                 {
-                    Console.WriteLine("Configure Realsense");
+                    MessageBox.Show("ProcessingThread.IsAlive?: " + !MainWindow.processingThread.IsAlive);
                     MainWindow.ConfigureRealSense();
                     MainWindow.processingThread.Start();
                 }
@@ -172,8 +173,8 @@ namespace FaceID
 
         public static void getImgLogin(int level = 255, int userID = 0)
         {
-            String imgDefault = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
-            String imgUser = @"C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
+            String imgDefault = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
+            String imgUser = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
             
             if (File.Exists(imgUser))
             {
