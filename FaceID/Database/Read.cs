@@ -87,6 +87,9 @@ namespace FaceID
                         {
                             Console.WriteLine("SUSPEITO DETECTED!");                            
                             Actions.sendAlertEmail();
+                        }else
+                        {
+                            Server.sendMsg(0, "PORT", "OPEN", (string)userData.userID);
                         }
                         
                         Console.WriteLine(userData.ToString());

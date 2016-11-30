@@ -261,6 +261,7 @@ namespace FaceID
                         else
                         {
                             userId = "No users in view";
+                            flagUserId = "modifyed";
                         }
                     }
 
@@ -364,9 +365,10 @@ namespace FaceID
             //Console.WriteLine(emails);
             //Actions.sendAlertEmail();
 
-            String path = @"C:\Users\Mostratec\Documents\SH2\user.png";
+            // String path = @"C:\Users\Mostratec\Documents\SH2\user.png";
+            //Server.sendFile(255, path);    
 
-            Server.sendFile(255, path);    
+            Server.sendMsg(0, "PORT", "OPEN", "100");
 
         }
 
