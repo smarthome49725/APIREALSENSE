@@ -225,7 +225,7 @@ namespace FaceID
                                 // Set the user ID and process register/unregister logic
                                 if (recognitionData.IsRegistered())
                                 {
-                                    userId = Convert.ToString(recognitionData.QueryUserID());
+                                    userId = Convert.ToString(recognitionData.QueryUserID());                                    
 
                                     if (flagUserId != userId)
                                     {
@@ -274,6 +274,7 @@ namespace FaceID
 
                     coords = faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString();
                     Server.sendMsg(255, "rect", coords, userId);
+                    Console.WriteLine(userId.ToString());
 
                 }
 
@@ -365,7 +366,7 @@ namespace FaceID
             //Console.WriteLine(emails);
             //Actions.sendAlertEmail();
 
-            // String path = @"C:\Users\Mostratec\Documents\SH2\user.png";
+            
             //Server.sendFile(255, path);    
 
             Server.sendMsg(0, "PORT", "OPEN", "100");

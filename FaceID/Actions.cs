@@ -100,8 +100,7 @@ namespace FaceID
                 Server.conBROW1canWrite = ONO_FF;
                 Console.WriteLine("ProcessingThread.IsAlive?: " + !MainWindow.processingThread.IsAlive);
                 if (ONO_FF && !MainWindow.processingThread.IsAlive)
-                {
-                    MessageBox.Show("ProcessingThread.IsAlive?: " + !MainWindow.processingThread.IsAlive);
+                {                  
                     MainWindow.ConfigureRealSense();
                     MainWindow.processingThread.Start();
                 }
