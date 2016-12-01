@@ -12,7 +12,7 @@ namespace FaceID
     {
         static object IPandPORT;
         
-        static string strCn = ConnectionString.getConnectionString();
+        static string strCn = Database.ConnectionString.getConnectionString();
 
         public static void Alterar(int userID = 0, string nome = "", string fone = "", string nasc = "", string email = "", string password = "", int level = 0, string blacklist = "false")
         {         

@@ -16,7 +16,7 @@ namespace FaceID
         static object emails;
         static int level = -1;
 
-        static string strCn = ConnectionString.getConnectionString();
+        static string strCn = Database.ConnectionString.getConnectionString();
         
         //static String userJSON;
         static List<string> lista = new List<string>();

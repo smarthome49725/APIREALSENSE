@@ -15,7 +15,7 @@ namespace FaceID
         //static string strCn = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security=True";
         //vs2015
         //static string strCn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
-        static string strCn = ConnectionString.getConnectionString();
+        static string strCn = Database.ConnectionString.getConnectionString();
 
         public static void Adiciona(int userID, string nome, string fone, string nasc, string email, string password, int level, string blacklist)
         {

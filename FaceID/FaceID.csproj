@@ -156,6 +156,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="IMG\logoSH2.png" />
+    <Resource Include="IMG\sh2.ico" />
+    <Resource Include="IMG\shart_home_automated.png" />
+    <Resource Include="IMG\users\user0 - Cópia.png" />
+    <Resource Include="IMG\users\user0.png" />
+    <Resource Include="IMG\users\user1.jpg" />
+    <Resource Include="IMG\users\user2.jpg" />
+    <Resource Include="IMG\users\user3.jpg" />
+    <Resource Include="IMG\users\user4.jpg" />
     <Content Include="libpxccpp2c.dll" />
   </ItemGroup>
   <ItemGroup>

@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
 
-namespace FaceID
+namespace FaceID.Database
 {
     class ConnectionString
     {
         public static string getConnectionString()
-        {            
-            return @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";
+        {
+            return @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\ADM\Documents\SH2\APIREALSENSE\FaceID\Database\SHDB.mdf;Integrated Security = True";            
+            
         }
     }
 }

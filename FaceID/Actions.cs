@@ -173,8 +173,8 @@ namespace FaceID
 
         public static void getImgLogin(int level = 255, int userID = 0)
         {
-            String imgDefault = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user0.png";
-            String imgUser = @"C:\Users\Mostratec\Documents\SH2\APIREALSENSE\FaceID\IMG\users\user" + userID + ".jpg";
+            String imgDefault = @"..\..\IMG\user0.png";
+            String imgUser = @"..\..\IMG\users\user" + userID + ".jpg";
             
             if (File.Exists(imgUser))
             {
