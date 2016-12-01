@@ -21,7 +21,7 @@ namespace FaceID
         //static String userJSON;
         static List<string> lista = new List<string>();
 
-        public static dynamic Reader(int userID = 0, int level = 255, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
+        public static dynamic Reader(int userID = 0, int level = 255, bool isCam = false, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
         {            
             dynamic userData = null;
             string commandText = null;            
@@ -83,11 +83,11 @@ namespace FaceID
 
                         
                         //User detected by camera
-                        if (level == 255 && userData.blacklist == "True")
+                        if (isCam == true && userData.blacklist == "True")
                         {
                             Console.WriteLine("SUSPEITO DETECTED!");                            
                             Actions.sendAlertEmail();
-                        }else
+                        }else if(isCam == true)
                         {
                             Server.sendMsg(0, "PORT", "OPEN", (string)userData.userID);
                         }

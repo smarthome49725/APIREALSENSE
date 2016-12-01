@@ -54,7 +54,7 @@ namespace FaceID
                     Console.WriteLine((string)codigo.tel);
                     Console.WriteLine((string)codigo.nasc);
                     Console.WriteLine((string)codigo.email);              
-                    LoadUser(0, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
+                    LoadUser(0, (int)codigo.level, false, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
                 case "updateuser":
@@ -141,12 +141,12 @@ namespace FaceID
             Actions.LoadUser(userId, level);
         }
 
-        public static void LoadUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "")
+        public static void LoadUser(int userId = 0, int level = 255, bool isCam = false, string nome = "", string tel = "", string nasc = "", string email = "")
         {
             Task.Run(() =>
             {
                 Console.WriteLine("2");
-                String userJSON = Read.Reader(userId, level, nome, tel, nasc, email);
+                String userJSON = Read.Reader(userId, level, isCam, nome, tel, nasc, email);
                 Console.WriteLine("3");
                 Server.sendMsg(level, "userData", userJSON, "");
                 userJSON = null;
@@ -173,7 +173,7 @@ namespace FaceID
 
         public static void getImgLogin(int level = 255, int userID = 0)
         {
-            String imgDefault = @"..\..\IMG\user0.png";
+            String imgDefault = @"..\..\IMG\users\user0.png";
             String imgUser = @"..\..\IMG\users\user" + userID + ".jpg";
             
             if (File.Exists(imgUser))

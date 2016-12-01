@@ -229,7 +229,7 @@ namespace FaceID
 
                                     if (flagUserId != userId)
                                     {
-                                        Actions.LoadUser(Convert.ToInt16(userId), 255);
+                                        Actions.LoadUser(Convert.ToInt16(userId), 255, true);
                                         flagUserId = userId;
                                     }
 
