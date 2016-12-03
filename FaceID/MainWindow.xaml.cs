@@ -202,8 +202,8 @@ namespace FaceID
                         if (numFacesDetected > 0)
                         {
                             // Get the first face detected (index 0)
-                            PXCMFaceData.Face face = faceData.QueryFaceByIndex(0);
-
+                            PXCMFaceData.Face face = faceData.QueryFaceByIndex(numFacesDetected -1);
+                            
                             // Retrieve face location data
                             PXCMFaceData.DetectionData faceDetectionData = face.QueryDetection();
                             if (faceDetectionData != null)
@@ -226,7 +226,7 @@ namespace FaceID
                                 if (recognitionData.IsRegistered())
                                 {
                                     userId = Convert.ToString(recognitionData.QueryUserID());                                    
-
+                                    //if (lastUserId == userId)
                                     if (flagUserId != userId)
                                     {
                                         Actions.LoadUser(Convert.ToInt16(userId), 255, true);
@@ -274,8 +274,7 @@ namespace FaceID
 
                     coords = faceRectangleX.ToString() + " " + faceRectangleY.ToString() + " " + faceRectangleWidth.ToString() + " " + faceRectangleHeight.ToString();
                     Server.sendMsg(255, "rect", coords, userId);
-                    Console.WriteLine(userId.ToString());
-
+                    
                 }
 
             }

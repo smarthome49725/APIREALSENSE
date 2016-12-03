@@ -34,7 +34,7 @@ namespace FaceID
                 case "rect":
                     rect((int)codigo.level, (bool)codigo.rect);
                     break;
-                case "registerUser":                    
+                case "registerUser":
                     registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
                     break;
                 case "registerUserBL":
@@ -49,11 +49,11 @@ namespace FaceID
                     break;
                 case "getuser":
                     Console.WriteLine("1");
-                    
+
                     Console.WriteLine((string)codigo.nome);
                     Console.WriteLine((string)codigo.tel);
                     Console.WriteLine((string)codigo.nasc);
-                    Console.WriteLine((string)codigo.email);              
+                    Console.WriteLine((string)codigo.email);
                     LoadUser(0, (int)codigo.level, false, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
@@ -77,17 +77,17 @@ namespace FaceID
 
 
         static void getLogin(String login, String password)
-        {             
+        {
             dynamic userData = Read.getLogin(login, password);
-            Console.WriteLine(userData);            
+            Console.WriteLine(userData);
             if (userData == "null")
-            {                
+            {
                 Server.sendMsg(255, "404", userData, "");
             }
             else
-            {                
+            {
                 Server.sendMsg(255, "200", userData, "");
-               
+
             }
 
         }
@@ -100,7 +100,7 @@ namespace FaceID
                 Server.conBROW1canWrite = ONO_FF;
                 Console.WriteLine("ProcessingThread.IsAlive?: " + !MainWindow.processingThread.IsAlive);
                 if (ONO_FF && !MainWindow.processingThread.IsAlive)
-                {                  
+                {
                     MainWindow.ConfigureRealSense();
                     MainWindow.processingThread.Start();
                 }
@@ -120,24 +120,27 @@ namespace FaceID
         static void registerUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "")
         {
             Task.Run(() =>
-            {            
-            Console.WriteLine("registerUser true");
-            Create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
-            MainWindow.SaveDatabaseToFile();            
-            Actions.LoadUser(userId, level);
+            {
+                Console.WriteLine("registerUser true");
+                Create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
+                MainWindow.SaveDatabaseToFile();
+                Actions.LoadUser(userId, level);
             });
         }
 
         static void unregisterUser(int userId, int level)
         {
-            Console.WriteLine("unregisterUser");
-            Delete delete = new Delete();
-            delete.Deletar(userId);
+            Task.Run(() =>
+            {
+                Console.WriteLine("unregisterUser");
+                Delete delete = new Delete();
+                delete.Deletar(userId);
 
-            MainWindow.doUnregister = true;
-            MainWindow.SaveDatabaseToFile();
+                MainWindow.doUnregister = true;
+                MainWindow.SaveDatabaseToFile();
 
-            Actions.LoadUser(userId, level);
+                Actions.LoadUser(userId, level);
+            });
         }
 
         public static void LoadUser(int userId = 0, int level = 255, bool isCam = false, string nome = "", string tel = "", string nasc = "", string email = "")
@@ -154,36 +157,45 @@ namespace FaceID
 
         public static void updateUser(int userId = 0, int level = 0, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "false")
         {
-            Update.Alterar(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
-            Actions.LoadUser(userId, level);
+            Task.Run(() =>
+            {
+                Update.Alterar(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
+                Actions.LoadUser(userId, level);
+            });
         }
 
         public static void updatealertemail(int level = 255, string email1 = "", string email2 = "", string email3 = "")
-        {            
+        {
             Update.updateAlertEmail(email1, email2, email3);
         }
 
         public static void getAlertemail(int level = 255)
         {
-            object emails = Read.getAlertEmail();
-            Server.sendMsg(level, "getalertemail", emails.ToString(), "");
-            //Console.WriteLine("Emails Sended For Browser: " + emails);
+            Task.Run(() =>
+            {
+                object emails = Read.getAlertEmail();
+                Server.sendMsg(level, "getalertemail", emails.ToString(), "");
+                //Console.WriteLine("Emails Sended For Browser: " + emails);
+            });
         }
 
         public static void getImgLogin(int level = 255, int userID = 0)
         {
-            String imgDefault = @"..\..\IMG\users\user0.png";
-            String imgUser = @"..\..\IMG\users\user" + userID + ".jpg";
-            
-            if (File.Exists(imgUser))
+            Task.Run(() =>
             {
-                Server.sendFile(level, imgUser);
-            }
-            else
-            {
-                Server.sendFile(level, imgDefault);
-            }
-            
+                String imgDefault = @"..\..\IMG\users\user0.png";
+                String imgUser = @"..\..\IMG\users\user" + userID + ".jpg";
+
+                if (File.Exists(imgUser))
+                {
+                    Server.sendFile(level, imgUser);
+                }
+                else
+                {
+                    Server.sendFile(level, imgDefault);
+                }
+            });
+
         }
 
         public static void sendAlertEmail()

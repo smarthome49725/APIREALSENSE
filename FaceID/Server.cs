@@ -392,76 +392,79 @@ namespace FaceID
          */
         public static void sendMsg(int level, String cod, String msg, String userId)
         {
-            //PARSE JSON
-            code.code = cod;
-            code.msg = msg;
-            code.userId = userId;
-            var codeJSON = JsonConvert.SerializeObject(code);
-
-            Byte[] msgConverted = Converter.strToByte(codeJSON);
-
-            //TRY SEND MSG NODEJS+++
-            if (level == 0 && conNJScanWrite)
+            Task.Run(() =>
             {
-                try
-                {
-                    Byte[] rawData = System.Text.ASCIIEncoding.UTF8.GetBytes(codeJSON);
-                    streamNJS.Write(rawData, 0, rawData.Length);
+                //PARSE JSON
+                code.code = cod;
+                code.msg = msg;
+                code.userId = userId;
+                var codeJSON = JsonConvert.SerializeObject(code);
 
-                }
-                catch
-                {
-                    conNJScanWrite = false;
-                    Console.WriteLine("Exception sendMsg NODEJS 000");
-                }
-            }
-            //TRY SEND MSG NODEJS---
+                Byte[] msgConverted = Converter.strToByte(codeJSON);
 
-            //TRY SEND MSG BROWSER1+++
-            if (level == 1 || (level == 255 && conBROW1canWrite))
-            {
-                try
+                //TRY SEND MSG NODEJS+++
+                if (level == 0 && conNJScanWrite)
                 {
-                    streamBROW1.Write(msgConverted, 0, msgConverted.Length);
-                }
-                catch
-                {
-                    conBROW1canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 111");
-                }
-            }
-            //TRY SEND MSG BROWSER1---
+                    try
+                    {
+                        Byte[] rawData = System.Text.ASCIIEncoding.UTF8.GetBytes(codeJSON);
+                        streamNJS.Write(rawData, 0, rawData.Length);
 
-            //TRY SEND MSG BROWSER2+++
-            if (level == 2 || (level == 255 && conBROW2canWrite))
-            {
+                    }
+                    catch
+                    {
+                        conNJScanWrite = false;
+                        Console.WriteLine("Exception sendMsg NODEJS 000");
+                    }
+                }
+                //TRY SEND MSG NODEJS---
 
-                try
+                //TRY SEND MSG BROWSER1+++
+                if (level == 1 || (level == 255 && conBROW1canWrite))
                 {
-                    streamBROW2.Write(msgConverted, 0, msgConverted.Length);
+                    try
+                    {
+                        streamBROW1.Write(msgConverted, 0, msgConverted.Length);
+                    }
+                    catch
+                    {
+                        conBROW1canWrite = false;
+                        Console.WriteLine("Exception sendMsg BROWSER 111");
+                    }
                 }
-                catch
-                {
-                    conBROW2canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 222");
-                }
-            }
-            //TRY SEND MSG BROWSER2---
+                //TRY SEND MSG BROWSER1---
 
-            //TRY SEND MSG BROWSER3+++
-            if (level == 3 || (level == 255 && conBROW3canWrite))
-            {
-                try
+                //TRY SEND MSG BROWSER2+++
+                if (level == 2 || (level == 255 && conBROW2canWrite))
                 {
-                    streamBROW3.Write(msgConverted, 0, msgConverted.Length);
+
+                    try
+                    {
+                        streamBROW2.Write(msgConverted, 0, msgConverted.Length);
+                    }
+                    catch
+                    {
+                        conBROW2canWrite = false;
+                        Console.WriteLine("Exception sendMsg BROWSER 222");
+                    }
                 }
-                catch
+                //TRY SEND MSG BROWSER2---
+
+                //TRY SEND MSG BROWSER3+++
+                if (level == 3 || (level == 255 && conBROW3canWrite))
                 {
-                    conBROW3canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 333");
+                    try
+                    {
+                        streamBROW3.Write(msgConverted, 0, msgConverted.Length);
+                    }
+                    catch
+                    {
+                        conBROW3canWrite = false;
+                        Console.WriteLine("Exception sendMsg BROWSER 333");
+                    }
                 }
-            }
-            //TRY SEND MSG BROWSER3---
+                //TRY SEND MSG BROWSER3---
+            });
 
         }
 
@@ -494,6 +497,7 @@ namespace FaceID
                 Thread.Sleep(100);
             }
         }
+
 
         /**
         * TESTE ENVIANDO DADOS PARA O BROWSER
@@ -533,7 +537,7 @@ namespace FaceID
             //from: smarthome49725@gmail.com
             //Port: 587
             Task.Run(() =>
-            {
+            {                
                 try
                 {
                     MailMessage mail = new MailMessage();
@@ -566,64 +570,67 @@ namespace FaceID
 
         public static void sendFile(int level, String path)
         {
-            Byte[] imgRaw = null;
+            Task.Run(() =>
+            {              
+                Byte[] imgRaw = null;
 
-            if (File.Exists(path))
-            {               
-                Byte[] rawData = File.ReadAllBytes(path);
-                imgRaw = Converter.encodeData(rawData);                
-                Console.WriteLine("sending image...");                
-            }
-            else
-            {
-                Console.WriteLine("Image does not exist!");
-            }
-            
-            //TRY SEND MSG BROWSER1+++
-            if (level == 1 || (level == 255 && conBROW1canWrite))
-            {
-                try
+                if (File.Exists(path))
                 {
-                    streamBROW1.Write(imgRaw, 0, imgRaw.Length);
+                    Byte[] rawData = File.ReadAllBytes(path);
+                    imgRaw = Converter.encodeData(rawData);
+                    Console.WriteLine("sending image...");
                 }
-                catch
+                else
                 {
-                    conBROW1canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 111");
+                    Console.WriteLine("Image does not exist!");
                 }
-            }
-            //TRY SEND MSG BROWSER1---
 
-            //TRY SEND MSG BROWSER2+++
-            if (level == 2 || (level == 255 && conBROW2canWrite))
-            {
+                //TRY SEND MSG BROWSER1+++
+                if (level == 1 || (level == 255 && conBROW1canWrite))
+                {
+                    try
+                    {
+                        streamBROW1.Write(imgRaw, 0, imgRaw.Length);
+                    }
+                    catch
+                    {
+                        conBROW1canWrite = false;
+                        Console.WriteLine("Exception sendMsg BROWSER 111");
+                    }
+                }
+                //TRY SEND MSG BROWSER1---
 
-                try
+                //TRY SEND MSG BROWSER2+++
+                if (level == 2 || (level == 255 && conBROW2canWrite))
                 {
-                    streamBROW2.Write(imgRaw, 0, imgRaw.Length);
-                }
-                catch
-                {
-                    conBROW2canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 222");
-                }
-            }
-            //TRY SEND MSG BROWSER2---
 
-            //TRY SEND MSG BROWSER3+++
-            if (level == 3 || (level == 255 && conBROW3canWrite))
-            {
-                try
-                {
-                    streamBROW3.Write(imgRaw, 0, imgRaw.Length);
+                    try
+                    {
+                        streamBROW2.Write(imgRaw, 0, imgRaw.Length);
+                    }
+                    catch
+                    {
+                        conBROW2canWrite = false;
+                        Console.WriteLine("Exception sendMsg BROWSER 222");
+                    }
                 }
-                catch
+                //TRY SEND MSG BROWSER2---
+
+                //TRY SEND MSG BROWSER3+++
+                if (level == 3 || (level == 255 && conBROW3canWrite))
                 {
-                    conBROW3canWrite = false;
-                    Console.WriteLine("Exception sendMsg BROWSER 333");
+                    try
+                    {
+                        streamBROW3.Write(imgRaw, 0, imgRaw.Length);
+                    }
+                    catch
+                    {
+                        conBROW3canWrite = false;
+                        Console.WriteLine("Exception sendMsg BROWSER 333");
+                    }
                 }
-            }
-            //TRY SEND MSG BROWSER3---
+                //TRY SEND MSG BROWSER3---
+            });
 
         }
 
