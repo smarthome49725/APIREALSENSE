@@ -87,6 +87,7 @@ namespace FaceID
                             lightRoom2 = reader["lightRoom2"].ToString(),
                             curtain = reader["curtain"].ToString(),
                             TV = reader["TV"].ToString(),
+                            TV_Increase = reader["TV_Increase"].ToString(),
                             air_conditioning = reader["air_conditioning"].ToString()
                         };
 
