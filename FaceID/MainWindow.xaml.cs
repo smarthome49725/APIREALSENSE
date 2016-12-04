@@ -229,7 +229,7 @@ namespace FaceID
                                     //if (lastUserId == userId)
                                     if (flagUserId != userId)
                                     {
-                                        Actions.LoadUser(Convert.ToInt16(userId), 255, true);
+                                        Actions.LoadUser(Convert.ToInt16(userId), 255, "userinview", true);
                                         flagUserId = userId;
                                     }
 
@@ -360,17 +360,19 @@ namespace FaceID
         //TESTES
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            
+
             //Console.WriteLine("Simulação da Câmera lendo o usuário...");
-            Actions.LoadUser(110, 255);
+
             //object emails = Read.getAlertEmail();
             //Console.WriteLine(emails);
             //Actions.sendAlertEmail();
 
-            
+
             //Server.sendFile(255, path);    
 
             //Server.sendMsg(255, "userData", "userData", "110");
+
+            Actions.LoadUser(102, 255, "userinview", true);            
 
         }
 

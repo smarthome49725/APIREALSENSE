@@ -49,7 +49,7 @@ namespace FaceID
                     Console.WriteLine((string)codigo.tel);
                     Console.WriteLine((string)codigo.nasc);
                     Console.WriteLine((string)codigo.email);
-                    LoadUser(0, (int)codigo.level, false, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
+                    LoadUser(0, (int)codigo.level, "userData", false, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
                 case "updateuser":
@@ -119,7 +119,7 @@ namespace FaceID
                 Console.WriteLine("registerUser true");
                 Create.Adiciona(userData);
                 MainWindow.SaveDatabaseToFile();
-                Actions.LoadUser(userData.userId, userData.level);
+                Actions.LoadUser(userData.userId, userData.level, "userData");
             });
         }
 
@@ -134,18 +134,18 @@ namespace FaceID
                 MainWindow.doUnregister = true;
                 MainWindow.SaveDatabaseToFile();
 
-                Actions.LoadUser(userId, level);
+                Actions.LoadUser(userId, level, "userData");
             });
         }
 
-        public static void LoadUser(int userId = 0, int level = 255, bool isCam = false, string nome = "", string tel = "", string nasc = "", string email = "")
+        public static void LoadUser(int userId = 0, int level = 255, string cod = "", bool isCam = false, string nome = "", string tel = "", string nasc = "", string email = "")
         {
             Task.Run(() =>
             {
                 Console.WriteLine("2");
                 String userJSON = Read.Reader(userId, level, isCam, nome, tel, nasc, email);
                 Console.WriteLine("3");
-                Server.sendMsg(level, "userData", userJSON, "");
+                Server.sendMsg(level, cod, userJSON, userId.ToString());
                 userJSON = null;
             });
         }
@@ -155,7 +155,7 @@ namespace FaceID
             Task.Run(() =>
             {
                 Update.Alterar(userData);
-                Actions.LoadUser(userData.userId, userData.level);
+                Actions.LoadUser(userData.userId, userData.level, "userData");
             });
         }
 
@@ -169,8 +169,7 @@ namespace FaceID
             Task.Run(() =>
             {
                 object emails = Read.getAlertEmail();
-                Server.sendMsg(level, "getalertemail", emails.ToString(), "");
-                //Console.WriteLine("Emails Sended For Browser: " + emails);
+                Server.sendMsg(level, "getalertemail", emails.ToString(), "");                
             });
         }
 
