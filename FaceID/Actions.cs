@@ -22,11 +22,9 @@ namespace FaceID
 
             codigo = JsonConvert.DeserializeObject<dynamic>(cod);
 
-            Console.WriteLine(codigo);
+            Console.WriteLine(codigo);        
 
-            String code = codigo.cod;
-
-            switch (code)
+            switch ((string)codigo.cod)
             {
                 case "getlogin":
                     getLogin((string)codigo.login, (string)codigo.password);
@@ -35,10 +33,7 @@ namespace FaceID
                     rect((int)codigo.level, (bool)codigo.rect);
                     break;
                 case "registerUser":
-                    registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
-                    break;
-                case "registerUserBL":
-                    registerUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, "", "", "", "", 0, (string)codigo.blacklist);
+                    registerUser(codigo);
                     break;
                 case "unregisterUser":
                     unregisterUser((int)codigo.userID, (int)codigo.level);
@@ -58,7 +53,7 @@ namespace FaceID
                     Console.WriteLine("READ USER-FINAL");
                     break;
                 case "updateuser":
-                    updateUser((int)codigo.userID, (int)codigo.level, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email, (string)codigo.password, (int)codigo.registerLevel, (string)codigo.blacklist);
+                    updateUser(codigo);
                     Console.WriteLine("updateuser!");
                     break;
                 case "updatealertemail":
@@ -117,14 +112,14 @@ namespace FaceID
             Console.WriteLine("Rect level" + level + ": " + ONO_FF);
         }
 
-        static void registerUser(int userId = 0, int level = 255, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "")
+        static void registerUser(dynamic userData)
         {
             Task.Run(() =>
             {
                 Console.WriteLine("registerUser true");
-                Create.Adiciona(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
+                Create.Adiciona(userData);
                 MainWindow.SaveDatabaseToFile();
-                Actions.LoadUser(userId, level);
+                Actions.LoadUser(userData.userId, userData.level);
             });
         }
 
@@ -155,12 +150,12 @@ namespace FaceID
             });
         }
 
-        public static void updateUser(int userId = 0, int level = 0, string nome = "", string tel = "", string nasc = "", string email = "", string password = "", int registerLevel = 0, string blacklist = "false")
+        public static void updateUser(dynamic userData)
         {
             Task.Run(() =>
             {
-                Update.Alterar(userId, nome, tel, nasc, email, password, registerLevel, blacklist);
-                Actions.LoadUser(userId, level);
+                Update.Alterar(userData);
+                Actions.LoadUser(userData.userId, userData.level);
             });
         }
 

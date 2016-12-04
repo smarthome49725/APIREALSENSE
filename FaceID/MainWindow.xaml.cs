@@ -357,10 +357,12 @@ namespace FaceID
                }));
         }
 
+        //TESTES
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            
             //Console.WriteLine("Simulação da Câmera lendo o usuário...");
-            //Actions.LoadUser(2, 255);
+            Actions.LoadUser(110, 255);
             //object emails = Read.getAlertEmail();
             //Console.WriteLine(emails);
             //Actions.sendAlertEmail();
@@ -368,7 +370,7 @@ namespace FaceID
             
             //Server.sendFile(255, path);    
 
-            Server.sendMsg(0, "PORT", "OPEN", "100");
+            //Server.sendMsg(255, "userData", "userData", "110");
 
         }
 

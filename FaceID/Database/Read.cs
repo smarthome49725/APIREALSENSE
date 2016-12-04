@@ -17,21 +17,21 @@ namespace FaceID
         static int level = -1;
 
         static string strCn = Database.ConnectionString.getConnectionString();
-        
+
         //static String userJSON;
         static List<string> lista = new List<string>();
 
         public static dynamic Reader(int userID = 0, int level = 255, bool isCam = false, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
-        {            
+        {
             dynamic userData = null;
-            string commandText = null;            
-                        
-            if (userID != 0) 
+            string commandText = null;
+
+            if (userID != 0)
             {
                 commandText = "SELECT * FROM tbusers WHERE userID=@userID";
             }
             else
-            {                
+            {
                 nome = nome == "" ? "?" : nome;
                 fone = fone == "" ? "?" : fone;
                 nasc = nasc == "" ? "?" : nasc;
@@ -41,7 +41,7 @@ namespace FaceID
                 {
                     nome = ""; fone = ""; nasc = ""; email = "";
                 }
-                
+
 
                 commandText = "SELECT * FROM tbusers WHERE (" +
                         "Nome LIKE '%" + nome + "%')" +
@@ -78,22 +78,31 @@ namespace FaceID
                             nasc = reader["nasc"].ToString(),
                             email = reader["email"].ToString(),
                             level = reader["level"].ToString(),
-                            blacklist = reader["blacklist"].ToString()
+                            blacklist = reader["blacklist"].ToString(),
+
+                            lightBathroom = reader["lightBathroom"].ToString(),
+                            lightKitchen = reader["lightKitchen"].ToString(),
+                            lightBedroom = reader["lightBedroom"].ToString(),
+                            lightRoom1 = reader["lightRoom1"].ToString(),
+                            lightRoom2 = reader["lightRoom2"].ToString(),
+                            TV = reader["TV"].ToString(),
+                            air_conditioning = reader["air_conditioning"].ToString()
                         };
 
-                        
+
                         //User detected by camera
                         if (isCam == true && userData.blacklist == "True")
                         {
-                            Console.WriteLine("SUSPEITO DETECTED!");                            
+                            Console.WriteLine("SUSPEITO DETECTED!");
                             Actions.sendAlertEmail();
-                        }else if(isCam == true)
-                        {
-                            Server.sendMsg(0, "PORT", "OPEN", (string)userData.userID);
                         }
-                        
+                        else if (isCam == true)
+                        {                            
+                            Server.sendMsg(0, "PORT", JsonConvert.SerializeObject(userData), (string)userData.userID);
+                        }
+
                         Console.WriteLine(userData.ToString());
-                        lista.Add(JsonConvert.SerializeObject(userData));                       
+                        lista.Add(JsonConvert.SerializeObject(userData));
 
                     }
 
@@ -117,7 +126,7 @@ namespace FaceID
 
 
         public static object getAlertEmail()
-        {            
+        {
             string commandText = "SELECT * FROM contact_email WHERE ID=1";
 
             using (SqlConnection connection = new SqlConnection(strCn))
@@ -134,12 +143,12 @@ namespace FaceID
                         {
                             email1 = reader["email1"].ToString(),
                             email2 = reader["email2"].ToString(),
-                            email3 = reader["email3"].ToString()                            
+                            email3 = reader["email3"].ToString()
                         };
 
                     }
 
-                    emails = JsonConvert.SerializeObject(emails);                    
+                    emails = JsonConvert.SerializeObject(emails);
 
                 }
                 catch (Exception ex)
@@ -159,7 +168,7 @@ namespace FaceID
         {
             dynamic userData = null;
             string commandText = "SELECT * FROM tbusers WHERE email=@login and password=@password";
-                        
+
             using (SqlConnection connection = new SqlConnection(strCn))
             {
                 SqlCommand command = new SqlCommand(commandText, connection);
@@ -169,13 +178,13 @@ namespace FaceID
 
                 command.Parameters.Add("@password", SqlDbType.VarChar);
                 command.Parameters["@password"].Value = password;
-                
+
                 try
                 {
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
-                    {                        
+                    {
                         userData = new
                         {
                             userID = reader["userID"].ToString(),
@@ -197,7 +206,7 @@ namespace FaceID
                 connection.Close();
                 connection.Dispose();
             }
-            
+
             return userData;
         }
 
