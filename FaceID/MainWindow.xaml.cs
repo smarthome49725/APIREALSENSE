@@ -372,7 +372,7 @@ namespace FaceID
 
             //Server.sendMsg(255, "userData", "userData", "110");
 
-            Actions.LoadUser(102, 255, "userinview", true);            
+            Actions.LoadUser(110, 255, "userinview", true);            
 
         }
 

@@ -85,6 +85,7 @@ namespace FaceID
                             lightBedroom = reader["lightBedroom"].ToString(),
                             lightRoom1 = reader["lightRoom1"].ToString(),
                             lightRoom2 = reader["lightRoom2"].ToString(),
+                            curtain = reader["curtain"].ToString(),
                             TV = reader["TV"].ToString(),
                             air_conditioning = reader["air_conditioning"].ToString()
                         };
@@ -97,7 +98,7 @@ namespace FaceID
                             Actions.sendAlertEmail();
                         }
                         else if (isCam == true)
-                        {                            
+                        {   
                             Server.sendMsg(0, "PORT", JsonConvert.SerializeObject(userData), (string)userData.userID);
                         }
 
