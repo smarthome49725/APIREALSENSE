@@ -24,7 +24,7 @@ namespace FaceID
         public static dynamic Reader(int userID = 0, int level = 255, bool isCam = false, string nome = "?", string fone = "?", string nasc = "?", string email = "?")
         {
             dynamic userData = null;
-            string commandText = null;
+            string commandText = null;           
 
             if (userID != 0)
             {

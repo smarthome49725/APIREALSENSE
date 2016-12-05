@@ -43,12 +43,7 @@ namespace FaceID
                     Console.WriteLine("doRegister");
                     break;
                 case "getuser":
-                    Console.WriteLine("1");
-
-                    Console.WriteLine((string)codigo.nome);
-                    Console.WriteLine((string)codigo.tel);
-                    Console.WriteLine((string)codigo.nasc);
-                    Console.WriteLine((string)codigo.email);
+                    Console.WriteLine("1");                    
                     LoadUser(0, (int)codigo.level, "userData", false, (string)codigo.nome, (string)codigo.tel, (string)codigo.nasc, (string)codigo.email);
                     Console.WriteLine("READ USER-FINAL");
                     break;
@@ -119,7 +114,7 @@ namespace FaceID
                 Console.WriteLine("registerUser true");
                 Create.Adiciona(userData);
                 MainWindow.SaveDatabaseToFile();
-                Actions.LoadUser(userData.userId, userData.level, "userData");
+                Actions.LoadUser((int)userData.userID, (int)userData.level, "userData");
             });
         }
 
@@ -155,7 +150,7 @@ namespace FaceID
             Task.Run(() =>
             {
                 Update.Alterar(userData);
-                Actions.LoadUser(userData.userId, userData.level, "userData");
+                Actions.LoadUser((int)userData.userID, userData.level, "userData");
             });
         }
 
